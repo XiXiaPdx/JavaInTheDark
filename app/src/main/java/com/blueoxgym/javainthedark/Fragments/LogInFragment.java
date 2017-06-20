@@ -27,4 +27,9 @@ public class LogInFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_log_in, container, false);
     }
 
+    public static LogInFragment newInstance(){
+        LogInFragment newFragment = new LogInFragment();
+        return newFragment;
+    }
+
 }

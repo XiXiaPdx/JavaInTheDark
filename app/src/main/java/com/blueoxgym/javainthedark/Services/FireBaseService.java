@@ -26,9 +26,13 @@ public class FireBaseService {
 
 
     public static Boolean isUserLogged() {
+
         if (firebaseAuth.getCurrentUser() != null) {
+            Log.d("NO USER", firebaseAuth.getCurrentUser().getEmail().toString());
+
             return true;
         } else {
+
             return false;
         }
     }
