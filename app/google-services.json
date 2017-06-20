@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "777062528238",
+    "firebase_url": "https://javainthedark.firebaseio.com",
+    "project_id": "javainthedark",
+    "storage_bucket": "javainthedark.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:777062528238:android:6ab56c2944ef7629",
+        "android_client_info": {
+          "package_name": "com.blueoxgym.javainthedark"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "777062528238-dnc6b3pr57648g032mdrvp923qsu4o0g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAo7cpQVgPG9b5b3M-TXiMHsbxScjSDpdU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
