@@ -23,11 +23,13 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
 public FirebaseAuth firebaseAuth;
+    public FirebaseAuth.AuthStateListener authListener;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,14 +54,7 @@ public FirebaseAuth firebaseAuth;
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        if(firebaseAuth.getCurrentUser() == null){
-            //user not logged in, go to Login Fragment
-            loadFragment(LogInFragment.newInstance());
-        } else {
-            //load recycler View fragment with list of lessons
-            loadFragment(LevelOne.newInstance());
-        }
-
+        makeAuthListener();
     }
 
     public void loadFragment(Fragment fragment) {
@@ -68,6 +63,19 @@ public FirebaseAuth firebaseAuth;
         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack(null).commit();
     }
 
+public void makeAuthListener(){
+ authListener = new FirebaseAuth.AuthStateListener(){
+     @Override
+     public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+        final FirebaseUser user = firebaseAuth.getCurrentUser();
+         if (user == null) {
+             loadFragment(LogInFragment.newInstance());
+         } else {
+             loadFragment(LevelOne.newInstance());
+         }
+     }
+ };
+}
 
     public void login () {
         firebaseAuth.signInWithEmailAndPassword("yes@me.com", "123456")
@@ -146,4 +154,19 @@ public FirebaseAuth firebaseAuth;
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        firebaseAuth.addAuthStateListener(authListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (authListener != null) {
+            firebaseAuth.removeAuthStateListener(authListener);
+        }
+    }
+
 }
