@@ -20,9 +20,19 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.jakewharton.rxbinding2.view.RxView;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.functions.Consumer;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
 
 /**
@@ -37,6 +47,7 @@ public class LogInFragment extends Fragment implements View.OnClickListener{
     Button loginButton;
     public FirebaseAuth firebaseAuth;
     public Toolbar toolbar;
+    public ArrayList testArray;
 
 
 
@@ -54,6 +65,7 @@ public class LogInFragment extends Fragment implements View.OnClickListener{
         firebaseAuth = FirebaseAuth.getInstance();
          toolbar = (Toolbar)getActivity().findViewById(R.id.toolbar);
         toolbar.setVisibility(View.GONE);
+        testArray = new ArrayList<String>(Arrays.asList("A", "B", "C"));
 
         return view;
     }
@@ -71,6 +83,10 @@ public class LogInFragment extends Fragment implements View.OnClickListener{
         }
         return valid;
     }
+
+    Observable<String> observable = Observable.just("First event");
+    Observable<Integer> oneToFiveObservable = Observable.range(0,5);
+    Observable<ArrayList> observableArray = Observable.fromArray(testArray);
 
 
     @Override
