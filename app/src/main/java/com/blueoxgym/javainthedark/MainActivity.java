@@ -77,20 +77,7 @@ public void makeAuthListener(){
  };
 }
 
-    public void login () {
-        firebaseAuth.signInWithEmailAndPassword("yes@me.com", "123456")
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()){
-                            Log.d("Creating User", "YES DONE");
-                        } else {
-                            Log.d("Did not create USER", "NOPE");
-                        }
-                    }
-                });
 
-    }
 
 
     @Override
@@ -140,7 +127,7 @@ public void makeAuthListener(){
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.log_in) {
-            login();
+            // go to login screen?
         } else if (id == R.id.log_out) {
             firebaseAuth.signOut();
             try{
