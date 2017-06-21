@@ -19,7 +19,6 @@ import android.view.MenuItem;
 
 import com.blueoxgym.javainthedark.Fragments.LevelOne;
 import com.blueoxgym.javainthedark.Fragments.LogInFragment;
-import com.blueoxgym.javainthedark.Services.FireBaseService;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -28,14 +27,14 @@ import com.google.firebase.auth.FirebaseAuth;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+public FirebaseAuth firebaseAuth;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-//        testCreate();
-
+        firebaseAuth = FirebaseAuth.getInstance();
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,12 +52,13 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        if(!FireBaseService.isUserLogged()){
+        if(firebaseAuth.getCurrentUser() == null){
             //user not logged in, go to Login Fragment
+            loadFragment(LogInFragment.newInstance());
         } else {
             //load recycler View fragment with list of lessons
+            loadFragment(LevelOne.newInstance());
         }
-        loadFragment(LogInFragment.newInstance());
 
     }
 
@@ -69,8 +69,8 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    public void testCreate () {
-        FireBaseService.firebaseAuth.createUserWithEmailAndPassword("yes@me.com", "123456")
+    public void login () {
+        firebaseAuth.signInWithEmailAndPassword("yes@me.com", "123456")
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -131,10 +131,15 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_manage) {
 
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        } else if (id == R.id.log_in) {
+            login();
+        } else if (id == R.id.log_out) {
+            firebaseAuth.signOut();
+            try{
+                Log.d("Current User", firebaseAuth.getCurrentUser().toString());
+            } catch (NullPointerException e){
+                Log.d("User Null", "Logged Out");
+            }
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
