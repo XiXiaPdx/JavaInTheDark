@@ -17,6 +17,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.blueoxgym.javainthedark.Fragments.LevelOne;
 import com.blueoxgym.javainthedark.Fragments.LogInFragment;
 import com.blueoxgym.javainthedark.Services.FireBaseService;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -62,6 +63,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void loadFragment(Fragment fragment) {
+        Log.d("Fragment Loading...", "Loading");
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack(null).commit();
     }
@@ -122,7 +124,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
-            // Handle the camera action
+            loadFragment(LevelOne.newInstance());
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
