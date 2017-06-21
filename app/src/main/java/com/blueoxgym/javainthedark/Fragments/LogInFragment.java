@@ -3,7 +3,9 @@ package com.blueoxgym.javainthedark.Fragments;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +36,8 @@ public class LogInFragment extends Fragment implements View.OnClickListener{
     @BindView (R.id.logInButton)
     Button loginButton;
     public FirebaseAuth firebaseAuth;
+    public Toolbar toolbar;
+
 
 
     public LogInFragment() {
@@ -48,6 +52,9 @@ public class LogInFragment extends Fragment implements View.OnClickListener{
         ButterKnife.bind(this, view);
         loginButton.setOnClickListener(this);
         firebaseAuth = FirebaseAuth.getInstance();
+         toolbar = (Toolbar)getActivity().findViewById(R.id.toolbar);
+        toolbar.setVisibility(View.GONE);
+
         return view;
     }
 
@@ -79,7 +86,7 @@ public class LogInFragment extends Fragment implements View.OnClickListener{
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if (task.isSuccessful()) {
-                                        Log.d("Signed IN", "YES DONE");
+                                        toolbar.setVisibility(View.VISIBLE);
                                     } else {
                                         Toast.makeText(getActivity(), "Authentication failed.",
                                                 Toast.LENGTH_SHORT).show();
