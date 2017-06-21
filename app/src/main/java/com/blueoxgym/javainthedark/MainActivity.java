@@ -4,8 +4,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.transition.Fade;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -58,7 +60,14 @@ public FirebaseAuth firebaseAuth;
     }
 
     public void loadFragment(Fragment fragment) {
-        Log.d("Fragment Loading...", "Loading");
+        // Enter transition set for fragment
+        Fade enterFade = new Fade ();
+        enterFade.setDuration(500);
+        fragment.setEnterTransition(enterFade);
+        // set transition fade for exit of fragment
+        Fade exitFade = new Fade();
+        exitFade.setDuration(200);
+        fragment.setExitTransition(exitFade);
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack(null).commit();
     }
