@@ -84,9 +84,9 @@ public class LogInFragment extends Fragment implements View.OnClickListener{
         return valid;
     }
 
-    Observable<String> observable = Observable.just("First event");
-    Observable<Integer> oneToFiveObservable = Observable.range(0,5);
-    Observable<ArrayList> observableArray = Observable.fromArray(testArray);
+//    Observable<String> observable = Observable.just("First event");
+//    Observable<Integer> oneToFiveObservable = Observable.range(0,5);
+//    Observable<ArrayList> observableArray = Observable.fromArray(testArray);
 
 
     @Override
