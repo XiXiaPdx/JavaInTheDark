@@ -5,6 +5,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.media.Image;
 import android.os.Bundle;
+import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -87,7 +88,9 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
                     ArrayList<String> result = data
                             .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                     String text = result.get(0);
-                    txtOutput.setText(text);
+
+                        txtOutput.setText(text);
+                    //upper and lower case when comparing text...move to all upper or lower
                 }
                 break;
             }
