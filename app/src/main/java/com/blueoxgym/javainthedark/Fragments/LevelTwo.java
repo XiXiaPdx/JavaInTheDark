@@ -41,10 +41,10 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
     @BindView(R.id.lyricTextView) TextView lyricText;
     @BindView(R.id.levelTextView) TextView levelText;
     private final int SPEECH_RECOGNITION_CODE = 1;
-    private final String lyric = "I, A, B, C, D, E.";
+    private final String lyric = "Forever,";
     private String verseNoPunc;
     private int currentLevel = 1;
-//    private String[] referenceWords;
+    private String[] referenceWords;
     private ArrayList displayWords;
 
     public LevelTwo() {
@@ -64,7 +64,6 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
         levelText.setText("LEVEL "+ currentLevel);
         displayWords = new ArrayList<String>();
         startLevelTwo();
-
         return view;
     }
 
@@ -113,7 +112,6 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
     public void checkForMatch(String speech){
         if (currentLevel == 1){
            if(isInstaMatch(speech)){
-               //advance to Level 2
                startLevelTwo();
            } else {
                txtOutput.setText("Please try again..." + speech);
@@ -128,7 +126,7 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
     }
 
     public Boolean isInstaMatch(String speech){
-        if(speech.equals(verseNoPunc)) {
+        if(speech.toLowerCase().equals(verseNoPunc)) {
             txtOutput.setText(speech);
             return true;
         } else {
@@ -139,18 +137,37 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
     public void checkEachWord (String speech){
         String[] speechWords = speech.split(" ");
         txtOutput.setText("Close! Please Try Again");
+        //reset displayWord
+        displayWords = new ArrayList <String>();
+        //compare each word in speech array with reference array
+        for (int i = 0; i < referenceWords.length; i++) {
+            //speaker can say too few words. Check to prevent indexOutofBounds
+            if (i < speechWords.length) {
+                // need to remove punctuation from this word
+                String currentWordNoPunc = removeWordPunc(referenceWords[i]);
+                String speechWord = speechWords[i].toLowerCase();
+                if (speechWord.equals(currentWordNoPunc)
+                        ) {
+                    //if word is match, pull original from reference WHICH HAS PUNC and add to display
+                    displayWords.add(referenceWords[i]);
+                } else {
+                    // word doesn't match, reveal more hints.
+                    revealMoreLetters(referenceWords[i]);
+                }
+            }
+        }
+        setLyricTextView();
     }
 
     public void startLevelTwo() {
         currentLevel = 2;
         levelText.setText("LEVEL " + 2);
         showFirstLetter();
-
     }
 
 
     public void showFirstLetter(){
-        String[] referenceWords = lyric.split(" ");
+        referenceWords = lyric.split(" ");
         //make Display array of words
         for ( int i=0; i < referenceWords.length; i++){
             //current word in the loop
@@ -181,12 +198,20 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
                 displayWords.add(newDisplayWord);
             }
         }
-        lyricText.setText(TextUtils.join(" ", displayWords));
+        setLyricTextView();
+    }
+
+    public void revealMoreLetters(String word){
+
     }
 
     public void setVerseNoPunc(String lyric){
         String [] words = lyric.replaceAll("[^a-zA-Z' ]", "").toLowerCase().split("\\s+");
         verseNoPunc = TextUtils.join(" ", words);
+    }
+
+    public String removeWordPunc(String word){
+        return word.replaceAll("[^a-zA-Z' ]", "").toLowerCase();
     }
 
     public Boolean checkTwoLetterPunc(String tempWord){
@@ -198,5 +223,9 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
     return false;
     }
 
+    public void setLyricTextView (){
+        lyricText.setText(TextUtils.join(" ", displayWords));
+
+    }
 
 }
