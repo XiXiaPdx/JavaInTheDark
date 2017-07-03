@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +19,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.blueoxgym.javainthedark.R;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -31,11 +35,11 @@ import static android.app.Activity.RESULT_OK;
  */
 public class LevelTwo extends Fragment implements View.OnClickListener {
     @BindView(R.id.txt_output)TextView txtOutput;
-    @BindView(R.id.btn_mic)
-    ImageButton btnMicrophone;
+    @BindView(R.id.btn_mic) ImageButton btnMicrophone;
+    @BindView(R.id.lyricTextView) TextView lyricText;
     private final int SPEECH_RECOGNITION_CODE = 1;
-
-
+    private final String lyric = "Jessica's For Forever, This Way.";
+    private String verseNoPunc;
 
 
     public LevelTwo() {
@@ -50,6 +54,8 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_level_two, container, false);
         ButterKnife.bind(this, view);
         btnMicrophone.setOnClickListener(this);
+        removePunc(lyric);
+        lyricText.setText(lyric);
         return view;
     }
 
@@ -88,12 +94,20 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
                     ArrayList<String> result = data
                             .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                     String text = result.get(0);
-
+                    if(text.equals(verseNoPunc)) {
                         txtOutput.setText(text);
-                    //upper and lower case when comparing text...move to all upper or lower
+                    } else {
+                        txtOutput.setText("Not Quite..." + text);
+                    }
+
                 }
                 break;
             }
         }
+    }
+
+    public void removePunc(String lyric){
+        String [] words = lyric.replaceAll("[^a-zA-Z' ]", "").toLowerCase().split("\\s+");
+        verseNoPunc = TextUtils.join(" ", words);
     }
 }
