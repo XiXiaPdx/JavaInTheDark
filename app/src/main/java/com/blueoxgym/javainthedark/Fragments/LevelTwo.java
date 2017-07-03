@@ -24,6 +24,8 @@ import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,7 +41,7 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
     @BindView(R.id.lyricTextView) TextView lyricText;
     @BindView(R.id.levelTextView) TextView levelText;
     private final int SPEECH_RECOGNITION_CODE = 1;
-    private final String lyric = "Jessica's, This Way.";
+    private final String lyric = "I, A, B, C, D, E.";
     private String verseNoPunc;
     private int currentLevel = 1;
 //    private String[] referenceWords;
@@ -102,7 +104,6 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
                             .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                     String text = result.get(0).toLowerCase();
                     checkForMatch(text);
-
                 }
                 break;
             }
@@ -121,8 +122,7 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
             if (isInstaMatch(speech)){
                 lyricText.setText(lyric);
             } else {
-                String[] speechWords = speech.split(" ");
-                Log.d("Speech words", TextUtils.join(" ", speechWords));
+                checkEachWord(speech);
             }
         }
     }
@@ -134,6 +134,11 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
         } else {
             return false;
         }
+    }
+
+    public void checkEachWord (String speech){
+        String[] speechWords = speech.split(" ");
+        txtOutput.setText("Close! Please Try Again");
     }
 
     public void startLevelTwo() {
@@ -154,6 +159,8 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
             if (tempWord.length() == 1){
                 displayWords.add("-");
                 // corner case   "I,"  will create issues
+            } else if (tempWord.length() == 2 && checkTwoLetterPunc(tempWord)){
+                displayWords.add("-"+tempWord.charAt(1));
             } else {
                 //loop over it and create new word character by character
                 String newDisplayWord="";
@@ -180,6 +187,15 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
     public void setVerseNoPunc(String lyric){
         String [] words = lyric.replaceAll("[^a-zA-Z' ]", "").toLowerCase().split("\\s+");
         verseNoPunc = TextUtils.join(" ", words);
+    }
+
+    public Boolean checkTwoLetterPunc(String tempWord){
+        Pattern p = Pattern.compile("[,.?!:]");
+        Matcher m = p.matcher(tempWord);
+        if(m.find()){
+            return true;
+        }
+    return false;
     }
 
 
