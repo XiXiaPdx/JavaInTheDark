@@ -38,7 +38,7 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
     @BindView(R.id.btn_mic) ImageButton btnMicrophone;
     @BindView(R.id.lyricTextView) TextView lyricText;
     private final int SPEECH_RECOGNITION_CODE = 1;
-    private final String lyric = "Jessica's For Forever, This Way.";
+    private final String lyric = "Jessica's, This Way.";
     private String verseNoPunc;
 
 
@@ -93,7 +93,7 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
                 if (resultCode == RESULT_OK && null != data) {
                     ArrayList<String> result = data
                             .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                    String text = result.get(0);
+                    String text = result.get(0).toLowerCase();
                     if(text.equals(verseNoPunc)) {
                         txtOutput.setText(text);
                     } else {
