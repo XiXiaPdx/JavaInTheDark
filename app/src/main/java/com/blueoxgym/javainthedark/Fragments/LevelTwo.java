@@ -41,11 +41,12 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
     @BindView(R.id.lyricTextView) TextView lyricText;
     @BindView(R.id.levelTextView) TextView levelText;
     private final int SPEECH_RECOGNITION_CODE = 1;
-    private final String lyric = "Forever,";
+    private final String lyric = "All we see is sky for forever.";
     private String verseNoPunc;
     private int currentLevel = 1;
     private String[] referenceWords;
     private ArrayList displayWords;
+    private ArrayList previousDisplayWords;
 
     public LevelTwo() {
         // Required empty public constructor
@@ -63,7 +64,7 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
         lyricText.setText(lyric);
         levelText.setText("LEVEL "+ currentLevel);
         displayWords = new ArrayList<String>();
-        startLevelTwo();
+//        startLevelTwo();
         return view;
     }
 
@@ -152,30 +153,56 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
                     displayWords.add(referenceWords[i]);
                 } else {
                     // word doesn't match, reveal more hints.
-                    revealMoreLetters(referenceWords[i]);
+                    revealMoreLetters(i);
                 }
+            } else {
+                //speech too short as compared to reference
+                revealMoreLetters(i);
             }
         }
         setLyricTextView();
     }
 
+    public void revealMoreLetters(int i ){
+        // We know speech did not equal reference
+        // use previousDisplayWords to know where to begin inserting new letter
+        String previousWord = previousDisplayWords.get(i).toString();
+        if (alreadySolved(previousWord)){
+            showFirstLetter(previousWord);
+            return;
+        }
+        Boolean revealed = false;
+        for (int j=0; j < previousWord.length(); j++ ){
+
+            if (String.valueOf(previousWord.charAt(j)).equals("-")){
+                StringBuilder tempWord = new StringBuilder(previousWord);
+                tempWord.setCharAt(j, referenceWords[i].charAt(j));
+                displayWords.add(tempWord);
+                revealed = true;
+                break;
+            }
+        }
+    }
+
     public void startLevelTwo() {
         currentLevel = 2;
         levelText.setText("LEVEL " + 2);
-        showFirstLetter();
+        //make Display array of lyric words
+        referenceWords = lyric.split(" ");
+        for ( int i=0; i < referenceWords.length; i++) {
+            String tempWord = referenceWords[i];
+            showFirstLetter(tempWord);
+        }
+        setLyricTextView();
     }
 
 
-    public void showFirstLetter(){
-        referenceWords = lyric.split(" ");
-        //make Display array of words
-        for ( int i=0; i < referenceWords.length; i++){
-            //current word in the loop
-            String tempWord = referenceWords[i];
+    public void showFirstLetter(String tempWord){
+
             //if word is length 1, then only "-"
             if (tempWord.length() == 1){
                 displayWords.add("-");
-                // corner case   "I,"  will create issues
+                // corner case   "I,"
             } else if (tempWord.length() == 2 && checkTwoLetterPunc(tempWord)){
                 displayWords.add("-"+tempWord.charAt(1));
             } else {
@@ -197,13 +224,15 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
                 }
                 displayWords.add(newDisplayWord);
             }
-        }
-        setLyricTextView();
     }
 
-    public void revealMoreLetters(String word){
-
+public Boolean alreadySolved(String word){
+    if (word.contains("-")){
+        return false;
+    } else {
+        return true;
     }
+}
 
     public void setVerseNoPunc(String lyric){
         String [] words = lyric.replaceAll("[^a-zA-Z' ]", "").toLowerCase().split("\\s+");
@@ -224,8 +253,7 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
     }
 
     public void setLyricTextView (){
+        previousDisplayWords = displayWords;
         lyricText.setText(TextUtils.join(" ", displayWords));
-
     }
-
 }
