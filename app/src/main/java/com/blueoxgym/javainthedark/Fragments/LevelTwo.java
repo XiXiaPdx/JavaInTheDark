@@ -41,7 +41,7 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
     @BindView(R.id.lyricTextView) TextView lyricText;
     @BindView(R.id.levelTextView) TextView levelText;
     private final int SPEECH_RECOGNITION_CODE = 1;
-    private final String lyric = "All we see is sky for forever.";
+    private final String lyric = "I U B C, D. H!";
     private String verseNoPunc;
     private int currentLevel = 1;
     private String[] referenceWords;
@@ -64,7 +64,7 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
         lyricText.setText(lyric);
         levelText.setText("LEVEL "+ currentLevel);
         displayWords = new ArrayList<String>();
-//        startLevelTwo();
+        startLevelTwo();
         return view;
     }
 
@@ -196,15 +196,27 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
         setLyricTextView();
     }
 
+    public void startLevelThree() {
+        currentLevel = 3;
+        levelText.setText("LEVEL " + 3);
+        //make Display array of lyric words
+        referenceWords = lyric.split(" ");
+        for ( int i=0; i < referenceWords.length; i++) {
+            String tempWord = referenceWords[i];
+//            showNoLetters(tempWord);
+        }
+        setLyricTextView();
+    }
 
+    //Level 3 code below
+
+
+
+   // Level 2 and shared code below
     public void showFirstLetter(String tempWord){
 
             //if word is length 1, then only "-"
-            if (tempWord.length() == 1){
-                displayWords.add("-");
-                // corner case   "I,"
-            } else if (tempWord.length() == 2 && checkTwoLetterPunc(tempWord)){
-                displayWords.add("-"+tempWord.charAt(1));
+            if (isOneLetterWord(tempWord)){
             } else {
                 //loop over it and create new word character by character
                 String newDisplayWord="";
@@ -231,6 +243,19 @@ public Boolean alreadySolved(String word){
         return false;
     } else {
         return true;
+    }
+}
+
+public Boolean isOneLetterWord(String tempWord){
+    if (tempWord.length() == 1){
+        displayWords.add("-");
+        return true;
+    } else if (tempWord.length() == 2 && checkTwoLetterPunc(tempWord)) {
+        // corner case   "I,"
+        displayWords.add("-" + tempWord.charAt(1));
+        return true;
+    } else{
+        return false;
     }
 }
 
