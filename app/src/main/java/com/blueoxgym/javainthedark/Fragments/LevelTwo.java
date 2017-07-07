@@ -44,7 +44,7 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
     @BindView(R.id.lyricTextView) TextView lyricText;
     @BindView(R.id.levelTextView) TextView levelText;
     private final int SPEECH_RECOGNITION_CODE = 1;
-    private final String lyric = "But if it had to perish twice, I think I know enough of hate To say that for destruction ice Is also great And would suffice.";
+    private final String lyric = "But if it had to perish twice, I think I know enough of hate.";
     private String verseNoPunc;
     private int currentLevel = 1;
     private String[] referenceWords;
@@ -124,6 +124,7 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
                 break;
             case 2:
             case 3:
+            case 4:
                 checkEachWord(speech);
         }
     }
@@ -196,6 +197,9 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
                     }
                     break;
                 case 3:
+                    displayWords.add(previousWord);
+                    break;
+                case 4:
                     if (dashCount > 1) {
                         Random ran = new Random();
                         int randomIndex = 0;
@@ -211,6 +215,7 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
                         displayWords.add(previousWord);
                     }
                     break;
+
         }
     }
 
@@ -225,6 +230,7 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
                 break;
             case 2:
             case 3:
+            case 4:
                 for ( int i=0; i < referenceWords.length; i++) {
                     String tempWord = referenceWords[i];
                     setHintWords(tempWord);
@@ -234,29 +240,45 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
     }
 
 
-    public void setHintWords(String tempWord){
-            if (isOneLetterWord(tempWord)){
-            } else {
-                String newDisplayWord="";
-                //loop over it and create new word character by character
-                for (int j=0; j < tempWord.length(); j++){
-                    // display first letter of word
-                    if (j==0 && currentLevel == 2){
-                        newDisplayWord = newDisplayWord + tempWord.charAt(j);
-                    } else {
-                        // add "-"
-                        if (isAtoZ(tempWord.charAt(j))){
-                            newDisplayWord = newDisplayWord +"-";
-                        } else {
-                            // keep punctuation
+    public void setHintWords(String tempWord) {
+        String newDisplayWord = "";
+        switch (currentLevel) {
+            case 2:
+            case 4:
+                if (isOneLetterWord(tempWord)) {
+                    break;
+                } else {
+                    //loop over it and create new word character by character
+                    for (int j = 0; j < tempWord.length(); j++) {
+                        // display first letter of word
+                        if (j == 0 && currentLevel == 2) {
                             newDisplayWord = newDisplayWord + tempWord.charAt(j);
+                        } else {
+                            // add "-"
+                            if (isAtoZ(tempWord.charAt(j))) {
+                                newDisplayWord = newDisplayWord + "-";
+                            } else {
+                                // keep punctuation
+                                newDisplayWord = newDisplayWord + tempWord.charAt(j);
+                            }
                         }
+                    }
+                    displayWords.add(newDisplayWord);
+                }
+                break;
+            case 3:
+                for (int j = 0; j < tempWord.length(); j++) {
+                    // display first letter of word
+                    if (j == 0) {
+                        newDisplayWord = newDisplayWord + tempWord.charAt(j);
+                    } else if ( j == (tempWord.length()-1) && ifEndInPunc(tempWord.charAt(j))){
+                        newDisplayWord = newDisplayWord + tempWord.charAt(j);
                     }
                 }
                 displayWords.add(newDisplayWord);
-            }
+                break;
+        }
     }
-
     
 
 public Boolean alreadySolved(String word){
