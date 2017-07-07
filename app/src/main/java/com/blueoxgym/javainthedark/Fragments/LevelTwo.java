@@ -44,9 +44,9 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
     @BindView(R.id.lyricTextView) TextView lyricText;
     @BindView(R.id.levelTextView) TextView levelText;
     private final int SPEECH_RECOGNITION_CODE = 1;
-    private final String lyric = "For Forever, This Way!";
+    private final String lyric = "But if it had to perish twice, I think I know enough of hate To say that for destruction ice Is also great And would suffice.";
     private String verseNoPunc;
-    private int currentLevel = 2;
+    private int currentLevel = 1;
     private String[] referenceWords;
     private ArrayList displayWords;
     private ArrayList previousDisplayWords;
@@ -120,7 +120,7 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
     public void checkForMatch(String speech){
         switch (currentLevel) {
             case 1:
-                txtOutput.setText("Please try again...");
+                txtOutput.setText("Please try again..."+speech);
                 break;
             case 2:
             case 3:
@@ -130,7 +130,7 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
 
     public Boolean isInstaMatch(String speech){
         if(speech.toLowerCase().equals(verseNoPunc)) {
-            txtOutput.setText("You got it! " +speech);
+            txtOutput.setText("You got it! ");
             return true;
         } else {
             return false;
@@ -175,23 +175,27 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
             return;
         }
             StringBuilder tempWord = new StringBuilder(previousWord);
+        int dashCount=0;
+        for (int k = 0; k < previousWord.length(); k++){
+            if (String.valueOf(previousWord.charAt(k)).equals("-")){
+                dashCount++;
+            }
+        }
             switch (currentLevel) {
                 case 2:
-                    for (int j=0; j < previousWord.length(); j++ ) {
-                        if (String.valueOf(previousWord.charAt(j)).equals("-")) {
-                            tempWord.setCharAt(j, referenceWords[i].charAt(j));
-                            displayWords.add(tempWord);
-                            break;
+                    if (dashCount > 1) {
+                        for (int j = 0; j < previousWord.length(); j++) {
+                            if (String.valueOf(previousWord.charAt(j)).equals("-")) {
+                                tempWord.setCharAt(j, referenceWords[i].charAt(j));
+                                displayWords.add(tempWord);
+                                break;
+                            }
                         }
+                    }else {
+                        displayWords.add(previousWord);
                     }
                     break;
                 case 3:
-                    int dashCount=0;
-                    for (int k = 0; k < previousWord.length(); k++){
-                        if (String.valueOf(previousWord.charAt(k)).equals("-")){
-                            dashCount++;
-                        }
-                    }
                     if (dashCount > 1) {
                         Random ran = new Random();
                         int randomIndex = 0;
