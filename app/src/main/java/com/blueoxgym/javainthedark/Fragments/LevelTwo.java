@@ -118,13 +118,9 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
     }
 
     public void checkForMatch(String speech){
-        switch (currentLevel) {
-            case 1:
-                txtOutput.setText("Please try again..."+speech);
-                break;
-            case 2:
-            case 3:
-            case 4:
+       if (currentLevel == 1) {
+           txtOutput.setText("Please try again..." + speech);
+       } else {
                 checkEachWord(speech);
         }
     }
@@ -197,6 +193,7 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
                     }
                     break;
                 case 3:
+                case 5:
                     displayWords.add(previousWord);
                     break;
                 case 4:
@@ -231,6 +228,7 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
             case 2:
             case 3:
             case 4:
+            case 5:
                 for ( int i=0; i < referenceWords.length; i++) {
                     String tempWord = referenceWords[i];
                     setHintWords(tempWord);
@@ -267,10 +265,18 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
                 }
                 break;
             case 3:
+            case 5:
                 for (int j = 0; j < tempWord.length(); j++) {
                     // display first letter of word
                     if (j == 0) {
-                        newDisplayWord = newDisplayWord + tempWord.charAt(j);
+                        switch (currentLevel) {
+                            case 3:
+                                newDisplayWord = newDisplayWord + tempWord.charAt(j);
+                                break;
+                            case 5:
+                                newDisplayWord = newDisplayWord + "-";
+                                break;
+                        }
                     } else if ( j == (tempWord.length()-1) && ifEndInPunc(tempWord.charAt(j))){
                         newDisplayWord = newDisplayWord + tempWord.charAt(j);
                     }
