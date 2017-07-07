@@ -46,7 +46,7 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
     private final int SPEECH_RECOGNITION_CODE = 1;
     private final String lyric = "For Forever, This Way!";
     private String verseNoPunc;
-    private int currentLevel = 1;
+    private int currentLevel = 2;
     private String[] referenceWords;
     private ArrayList displayWords;
     private ArrayList previousDisplayWords;
@@ -159,7 +159,8 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
                 }
             } else {
                 //speech too short as compared to reference
-                revealMoreLetters(i);
+//                revealMoreLetters(i);
+                setHintWords(referenceWords[i]);
             }
         }
         setLyricTextView();
@@ -183,17 +184,28 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
                             break;
                         }
                     }
+                    break;
                 case 3:
-                    Random ran = new Random();
-                    int randomLetter=0;
-                    Pattern p = Pattern.compile("[a-zA-Z]");
-                    Matcher m = p.matcher(referenceWords[randomLetter]);
-                    do {
-                        randomLetter = ran.nextInt(referenceWords[i].length());
-                        Log.d("RANDOM", Integer.toString(randomLetter));
-                    } while (randomLetter == 0 || !(m.find()));
-                    tempWord.setCharAt(randomLetter, referenceWords[i].charAt(randomLetter));
-                    displayWords.add(tempWord);
+                    int dashCount=0;
+                    for (int k = 0; k < previousWord.length(); k++){
+                        if (String.valueOf(previousWord.charAt(k)).equals("-")){
+                            dashCount++;
+                        }
+                    }
+                    if (dashCount > 1) {
+                        Random ran = new Random();
+                        int randomIndex = 0;
+                        Character randomLetter;
+                        do {
+                            randomIndex = ran.nextInt(referenceWords[i].length());
+                            randomLetter = referenceWords[i].charAt(randomIndex);
+                        }
+                        while (randomIndex == 0 || ifEndInPunc(randomLetter) || isAtoZ(tempWord.charAt(randomIndex)));
+                        tempWord.setCharAt(randomIndex, randomLetter);
+                        displayWords.add(tempWord);
+                    } else {
+                        displayWords.add(previousWord);
+                    }
                     break;
         }
     }
@@ -229,7 +241,7 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
                         newDisplayWord = newDisplayWord + tempWord.charAt(j);
                     } else {
                         // add "-"
-                        if (String.valueOf(tempWord.charAt(j)).matches("[a-zA-Z]")){
+                        if (isAtoZ(tempWord.charAt(j))){
                             newDisplayWord = newDisplayWord +"-";
                         } else {
                             // keep punctuation
@@ -251,11 +263,18 @@ public Boolean alreadySolved(String word){
     }
 }
 
+public Boolean isAtoZ(char letter){
+    if(String.valueOf(letter).matches("[a-zA-Z]")){
+        return true;
+    }
+    return false;
+}
+
 public Boolean isOneLetterWord(String tempWord){
     if (tempWord.length() == 1){
         displayWords.add("-");
         return true;
-    } else if (tempWord.length() == 2 && checkTwoLetterPunc(tempWord)) {
+    } else if (tempWord.length() == 2 && ifEndInPunc(tempWord.charAt(1))) {
         // corner case   "I,"
         displayWords.add("-" + tempWord.charAt(1));
         return true;
@@ -273,9 +292,9 @@ public Boolean isOneLetterWord(String tempWord){
         return word.replaceAll("[^a-zA-Z' ]", "").toLowerCase();
     }
 
-    public Boolean checkTwoLetterPunc(String tempWord){
-        Pattern p = Pattern.compile("[,.?!:]");
-        Matcher m = p.matcher(tempWord);
+    public Boolean ifEndInPunc(Character letter){
+        Pattern p = Pattern.compile("[,.?!:']");
+        Matcher m = p.matcher(String.valueOf(letter));
         if(m.find()){
             return true;
         }
