@@ -22,8 +22,11 @@ import com.blueoxgym.javainthedark.R;
 
 import org.w3c.dom.Text;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Locale;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -41,7 +44,7 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
     @BindView(R.id.lyricTextView) TextView lyricText;
     @BindView(R.id.levelTextView) TextView levelText;
     private final int SPEECH_RECOGNITION_CODE = 1;
-    private final String lyric = "I U B C, D. H!";
+    private final String lyric = "For Forever, This Way!";
     private String verseNoPunc;
     private int currentLevel = 1;
     private String[] referenceWords;
@@ -63,8 +66,7 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
         setVerseNoPunc(lyric);
         lyricText.setText(lyric);
         levelText.setText("LEVEL "+ currentLevel);
-        displayWords = new ArrayList<String>();
-        startLevelTwo();
+        startLevel();
         return view;
     }
 
@@ -103,32 +105,32 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
                     ArrayList<String> result = data
                             .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                     String text = result.get(0).toLowerCase();
-                    checkForMatch(text);
+                    if (isInstaMatch(text)) {
+                        currentLevel += 1;
+                        startLevel();
+                    } else {
+                        checkForMatch(text);
+                    }
+                    break;
                 }
-                break;
             }
         }
     }
 
     public void checkForMatch(String speech){
-        if (currentLevel == 1){
-           if(isInstaMatch(speech)){
-               startLevelTwo();
-           } else {
-               txtOutput.setText("Please try again..." + speech);
-           }
-        } else if (currentLevel == 2){
-            if (isInstaMatch(speech)){
-                lyricText.setText(lyric);
-            } else {
+        switch (currentLevel) {
+            case 1:
+                txtOutput.setText("Please try again...");
+                break;
+            case 2:
+            case 3:
                 checkEachWord(speech);
-            }
         }
     }
 
     public Boolean isInstaMatch(String speech){
         if(speech.toLowerCase().equals(verseNoPunc)) {
-            txtOutput.setText(speech);
+            txtOutput.setText("You got it! " +speech);
             return true;
         } else {
             return false;
@@ -163,66 +165,67 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
         setLyricTextView();
     }
 
-    public void revealMoreLetters(int i ){
+    public void revealMoreLetters(int i){
         // We know speech did not equal reference
         // use previousDisplayWords to know where to begin inserting new letter
         String previousWord = previousDisplayWords.get(i).toString();
         if (alreadySolved(previousWord)){
-            showFirstLetter(previousWord);
+            setHintWords(previousWord);
             return;
         }
-        Boolean revealed = false;
-        for (int j=0; j < previousWord.length(); j++ ){
+            StringBuilder tempWord = new StringBuilder(previousWord);
+            switch (currentLevel) {
+                case 2:
+                    for (int j=0; j < previousWord.length(); j++ ) {
+                        if (String.valueOf(previousWord.charAt(j)).equals("-")) {
+                            tempWord.setCharAt(j, referenceWords[i].charAt(j));
+                            displayWords.add(tempWord);
+                            break;
+                        }
+                    }
+                case 3:
+                    Random ran = new Random();
+                    int randomLetter=0;
+                    Pattern p = Pattern.compile("[a-zA-Z]");
+                    Matcher m = p.matcher(referenceWords[randomLetter]);
+                    do {
+                        randomLetter = ran.nextInt(referenceWords[i].length());
+                        Log.d("RANDOM", Integer.toString(randomLetter));
+                    } while (randomLetter == 0 || !(m.find()));
+                    tempWord.setCharAt(randomLetter, referenceWords[i].charAt(randomLetter));
+                    displayWords.add(tempWord);
+                    break;
+        }
+    }
 
-            if (String.valueOf(previousWord.charAt(j)).equals("-")){
-                StringBuilder tempWord = new StringBuilder(previousWord);
-                tempWord.setCharAt(j, referenceWords[i].charAt(j));
-                displayWords.add(tempWord);
-                revealed = true;
+    public void startLevel() {
+        displayWords= new ArrayList<String>();
+        levelText.setText("LEVEL " + currentLevel);
+        //make Display array of lyric words
+        referenceWords = lyric.split(" ");
+        switch (currentLevel){
+            case 1:
+                displayWords = new ArrayList<String>(Arrays.asList(referenceWords));
                 break;
-            }
-        }
-    }
-
-    public void startLevelTwo() {
-        currentLevel = 2;
-        levelText.setText("LEVEL " + 2);
-        //make Display array of lyric words
-        referenceWords = lyric.split(" ");
-        for ( int i=0; i < referenceWords.length; i++) {
-            String tempWord = referenceWords[i];
-            showFirstLetter(tempWord);
+            case 2:
+            case 3:
+                for ( int i=0; i < referenceWords.length; i++) {
+                    String tempWord = referenceWords[i];
+                    setHintWords(tempWord);
+                }
         }
         setLyricTextView();
     }
 
-    public void startLevelThree() {
-        currentLevel = 3;
-        levelText.setText("LEVEL " + 3);
-        //make Display array of lyric words
-        referenceWords = lyric.split(" ");
-        for ( int i=0; i < referenceWords.length; i++) {
-            String tempWord = referenceWords[i];
-//            showNoLetters(tempWord);
-        }
-        setLyricTextView();
-    }
 
-    //Level 3 code below
-
-
-
-   // Level 2 and shared code below
-    public void showFirstLetter(String tempWord){
-
-            //if word is length 1, then only "-"
+    public void setHintWords(String tempWord){
             if (isOneLetterWord(tempWord)){
             } else {
-                //loop over it and create new word character by character
                 String newDisplayWord="";
+                //loop over it and create new word character by character
                 for (int j=0; j < tempWord.length(); j++){
                     // display first letter of word
-                    if (j==0){
+                    if (j==0 && currentLevel == 2){
                         newDisplayWord = newDisplayWord + tempWord.charAt(j);
                     } else {
                         // add "-"
@@ -237,6 +240,8 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
                 displayWords.add(newDisplayWord);
             }
     }
+
+    
 
 public Boolean alreadySolved(String word){
     if (word.contains("-")){
