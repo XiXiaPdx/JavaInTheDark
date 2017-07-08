@@ -18,9 +18,11 @@ import com.google.firebase.database.Logger;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.http.Body;
 
 import static com.blueoxgym.javainthedark.Constants.MUSIC_MATCH_KEY;
 
@@ -49,7 +51,11 @@ public class LevelOne extends Fragment implements View.OnClickListener {
         call.enqueue(new Callback<LyricsModel>() {
             @Override
             public void onResponse(Call<LyricsModel> call, Response<LyricsModel> response) {
-                Log.d("SUCCESS", "YESSSSSSS");
+                if (response.code() == 200) {
+                   LyricsModel songLyrics = response.body();
+                    Log.d("SUCCESS", songLyrics.getMessage().getBody().getLyrics().getLyrics_body().toString());
+
+                }
             }
 
             @Override
