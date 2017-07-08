@@ -44,7 +44,9 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
     @BindView(R.id.lyricTextView) TextView lyricText;
     @BindView(R.id.levelTextView) TextView levelText;
     private final int SPEECH_RECOGNITION_CODE = 1;
-    private final String lyric = "But if it had to perish twice, I think I know enough of hate.";
+    private final String lyric = "Now and then, I think of when we were together\nLike when you said you felt so happy you could die\nTold myself that you were right for me\n";
+
+
     private String verseNoPunc;
     private int currentLevel = 1;
     private String[] referenceWords;
