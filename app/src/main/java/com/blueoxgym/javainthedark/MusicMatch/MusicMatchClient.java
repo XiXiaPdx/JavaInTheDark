@@ -17,4 +17,14 @@ public interface MusicMatchClient {
             @Query("track_id") String songID,
             @Query ("apikey") String apiKey
     );
+
+    @GET("track.search")
+    Call <LyricsModel> songSearch(
+            @Query("q_track_artist") String songSearchTerms,
+            @Query ("apikey") String apiKey,
+            @Query("f_has_lyrics") String hasLyrics,
+            @Query("page_size") String numberOfResults
+
+    );
+
 }
