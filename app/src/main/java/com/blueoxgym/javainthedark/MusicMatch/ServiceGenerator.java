@@ -5,6 +5,7 @@ import android.util.Log;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import static com.blueoxgym.javainthedark.Constants.MUSIC_MATCH_BASEURL;
@@ -18,8 +19,8 @@ public class ServiceGenerator {
     private static Retrofit.Builder builder =
             new Retrofit.Builder()
                     .baseUrl(MUSIC_MATCH_BASEURL)
-                    .addConverterFactory(
-                            GsonConverterFactory.create()
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create()
                     );
 
     private static Retrofit retrofit = builder.build();

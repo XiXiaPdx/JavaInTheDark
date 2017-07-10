@@ -1,5 +1,6 @@
 package com.blueoxgym.javainthedark.MusicMatch;
 
+import io.reactivex.Observable;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
@@ -13,13 +14,13 @@ import static com.blueoxgym.javainthedark.Constants.MUSIC_MATCH_KEY;
 
 public interface MusicMatchClient {
     @GET("track.lyrics.get")
-    Call <LyricsModel> songLyrics(
+    Observable<LyricsModel> songLyrics(
             @Query("track_id") String songID,
             @Query ("apikey") String apiKey
     );
 
     @GET("track.search")
-    Call <LyricsModel> songSearch(
+    Observable <LyricsModel> songSearch(
             @Query("q_track_artist") String songSearchTerms,
             @Query ("apikey") String apiKey,
             @Query("f_has_lyrics") String hasLyrics,
