@@ -18,6 +18,8 @@ import com.blueoxgym.javainthedark.MusicMatch.ServiceGenerator;
 import com.blueoxgym.javainthedark.MusicMatch.EachTrack;
 import com.blueoxgym.javainthedark.R;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -41,6 +43,7 @@ public class LevelOne extends Fragment implements View.OnClickListener {
         @BindView(R.id.button3) Button button;
     @BindView(R.id.lyricsTextView)
     TextView lyricsView;
+    List verseList;
 
 
     public LevelOne() {
@@ -56,7 +59,9 @@ public class LevelOne extends Fragment implements View.OnClickListener {
         ButterKnife.bind(this, view);
         button.setOnClickListener(this);
         String lyrics = getArguments().getString("lyrics", "");
+        verseList = new ArrayList<String>();
         lyricsView.setText(lyrics);
+        lyricsToVerseList(lyrics);
         return view;
     }
 
@@ -75,6 +80,13 @@ public class LevelOne extends Fragment implements View.OnClickListener {
             LevelTwo levelTwo = new LevelTwo();
             //can not just import MainActivity and set to variable as global in this class. Must create a new instance of LoadFragment everytime or crashes on replace fragment
             ((MainActivity)getActivity()).loadFragment(levelTwo.newInstance());
+        }
+    }
+
+    public void lyricsToVerseList(String lyrics){
+        verseList= Arrays.asList(lyrics.split("\n"));
+        for(Object verse: verseList){
+            Log.d("VERSE", verse.toString());
         }
     }
 
