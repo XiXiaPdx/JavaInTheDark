@@ -2,6 +2,7 @@ package com.blueoxgym.javainthedark.Fragments;
 
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,12 +23,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.content.ContentValues.TAG;
 import static com.blueoxgym.javainthedark.Constants.MUSIC_MATCH_KEY;
 
 /**
@@ -35,7 +38,6 @@ import static com.blueoxgym.javainthedark.Constants.MUSIC_MATCH_KEY;
  */
 public class LevelOne extends Fragment implements View.OnClickListener {
         @BindView(R.id.button3) Button button;
-    public static final String TAG = "In Observer";
 
 
     public LevelOne() {
@@ -51,8 +53,6 @@ public class LevelOne extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_level_one, container, false);
         ButterKnife.bind(this, view);
         button.setOnClickListener(this);
-        getLyricsCall();
-        searchForSong();
         return view;
     }
 
@@ -70,106 +70,5 @@ public class LevelOne extends Fragment implements View.OnClickListener {
         }
     }
 
-    public void getLyricsCall(){
-        MusicMatchClient client = ServiceGenerator.createService(MusicMatchClient.class);
-        Observable<LyricsModel> call = client.songLyrics("126153559", MUSIC_MATCH_KEY);
-        //observer
-        Observer<LyricsModel> observer = new Observer<LyricsModel>() {
 
-            @Override
-            public void onSubscribe(Disposable d) {
-                Log.e(TAG, "onSubscribe" + Thread.currentThread().getName());
-            }
-
-            @Override
-            public void onNext(LyricsModel value) {
-                Log.e(TAG, "onNext: " +  value.getMessage().getBody().getLyrics().getLyrics_body().toString() + Thread.currentThread().getName());
-            }
-
-
-            @Override
-            public void onError(Throwable e) {
-                Log.e(TAG, "onError: ");
-            }
-
-            @Override
-            public void onComplete() {
-                Log.e(TAG, "onComplete: All Done!" + Thread.currentThread().getName());
-            }
-
-        };
-        call.subscribeOn(Schedulers.newThread())
-                .subscribe(observer);
-
-
-//call.enqueue(new Callback<LyricsModel>() {
-//            @Override
-//            public void onResponse(Call<LyricsModel> call, Response<LyricsModel> response) {
-//                if (response.code() == 200) {
-//                    LyricsModel songLyrics = response.body();
-//                    Log.d("SUCCESS", songLyrics.getMessage().getBody().getLyrics().getLyrics_body().toString());
-//
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<LyricsModel> call, Throwable t) {
-//                Log.d("FAILED", "NOOOOOOOOOO");
-//
-//            }
-//        });
-    }
-
-    public void searchForSong(){
-        MusicMatchClient client = ServiceGenerator.createService(MusicMatchClient.class);
-        Observable<LyricsModel> call = client.songSearch("Million Reasons Gaga", MUSIC_MATCH_KEY, "true", "5");
-        Observer<LyricsModel> observer = new Observer<LyricsModel>() {
-
-            @Override
-            public void onSubscribe(Disposable d) {
-                Log.e(TAG, "onSubscribe" + Thread.currentThread().getName());
-            }
-
-            @Override
-            public void onNext(LyricsModel value) {
-                Log.e(TAG, "onNext: "  + Thread.currentThread().getName());
-
-                List<EachTrack> trackList = value.getMessage().getBody().getTrack_list();
-                    for (EachTrack track: trackList) {
-                        Log.d("IN OBSERVABLE LOOP", Integer.toString(track.getTrack().getTrack_id()));
-                    }
-            }
-
-
-            @Override
-            public void onError(Throwable e) {
-                Log.e(TAG, "onError: ");
-            }
-
-            @Override
-            public void onComplete() {
-                Log.e(TAG, "onComplete: All Done!" + Thread.currentThread().getName());
-            }
-
-        };
-        call.subscribeOn(Schedulers.newThread())
-                .subscribe(observer);
-
-//        call.enqueue(new Callback<LyricsModel>() {
-//            @Override
-//            public void onResponse(Call<LyricsModel> call, Response<LyricsModel> response) {
-//                if (response.code() == 200) {
-//                    List<EachTrack> trackList = response.body().getMessage().getBody().getTrack_list();
-//                    for (EachTrack track: trackList) {
-//                        Log.d("SEARCH SEARCH", Integer.toString(track.getTrack().getTrack_id()));
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<LyricsModel> call, Throwable t) {
-//                Log.d("FAILED", "NOOOOOOOOOO");
-//            }
-//        });
-    }
 }

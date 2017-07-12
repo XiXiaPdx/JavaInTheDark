@@ -20,8 +20,7 @@ public class ServiceGenerator {
             new Retrofit.Builder()
                     .baseUrl(MUSIC_MATCH_BASEURL)
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                    .addConverterFactory(GsonConverterFactory.create()
-                    );
+                    .addConverterFactory(GsonConverterFactory.create());
 
     private static Retrofit retrofit = builder.build();
 
