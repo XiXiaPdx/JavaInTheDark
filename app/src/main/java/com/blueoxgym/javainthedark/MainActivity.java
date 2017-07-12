@@ -97,8 +97,6 @@ public void makeAuthListener(){
         final FirebaseUser user = firebaseAuth.getCurrentUser();
          if (user == null) {
              loadFragment(LogInFragment.newInstance());
-         } else {
-             loadFragment(LevelOne.newInstance());
          }
      }
  };
@@ -120,9 +118,9 @@ public void makeAuthListener(){
 
             @Override
             public void onNext(LyricsModel value) {
-                Log.e(TAG, "onNext: " +  value.getMessage().getBody().getLyrics().getLyrics_body().toString() + Thread.currentThread().getName());
+                loadFragment(LevelOne.newInstance(value.getMessage().getBody().getLyrics().getLyrics_body()));
+                Log.e(TAG, "onNext: " +  value.getMessage().getBody().getLyrics().getLyrics_body()+ Thread.currentThread().getName());
             }
-
 
             @Override
             public void onError(Throwable e) {
@@ -136,24 +134,6 @@ public void makeAuthListener(){
 
         };
         call.subscribe(observer);
-
-
-//call.enqueue(new Callback<LyricsModel>() {
-//            @Override
-//            public void onResponse(Call<LyricsModel> call, Response<LyricsModel> response) {
-//                if (response.code() == 200) {
-//                    LyricsModel songLyrics = response.body();
-//                    Log.d("SUCCESS", songLyrics.getMessage().getBody().getLyrics().getLyrics_body().toString());
-//
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<LyricsModel> call, Throwable t) {
-//                Log.d("FAILED", "NOOOOOOOOOO");
-//
-//            }
-//        });
     }
 
 
@@ -172,16 +152,9 @@ public void makeAuthListener(){
             @Override
             public void onNext(LyricsModel value) {
                 Log.e(TAG, "onNext: "  + Thread.currentThread().getName());
-
                 List<EachTrack> trackList = value.getMessage().getBody().getTrack_list();
-                for (EachTrack track: trackList) {
-                    Log.d("IN OBSERVABLE LOOP", Integer.toString(track.getTrack().getTrack_id()));
-                }
-                getLyricsCall(trackList.get(4).getTrack().getTrack_id());
-
-
+                getLyricsCall(trackList.get(0).getTrack().getTrack_id());
             }
-
 
             @Override
             public void onError(Throwable e) {
@@ -195,23 +168,6 @@ public void makeAuthListener(){
 
         };
         call.subscribe(observer);
-
-//        call.enqueue(new Callback<LyricsModel>() {
-//            @Override
-//            public void onResponse(Call<LyricsModel> call, Response<LyricsModel> response) {
-//                if (response.code() == 200) {
-//                    List<EachTrack> trackList = response.body().getMessage().getBody().getTrack_list();
-//                    for (EachTrack track: trackList) {
-//                        Log.d("SEARCH SEARCH", Integer.toString(track.getTrack().getTrack_id()));
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<LyricsModel> call, Throwable t) {
-//                Log.d("FAILED", "NOOOOOOOOOO");
-//            }
-//        });
     }
 
     @Override
@@ -253,7 +209,7 @@ public void makeAuthListener(){
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
-            loadFragment(LevelOne.newInstance());
+            loadFragment(LevelOne.newInstance("Loaded from Nav drawer test"));
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {

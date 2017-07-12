@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.blueoxgym.javainthedark.MainActivity;
 import com.blueoxgym.javainthedark.MusicMatch.LyricsModel;
@@ -38,12 +39,13 @@ import static com.blueoxgym.javainthedark.Constants.MUSIC_MATCH_KEY;
  */
 public class LevelOne extends Fragment implements View.OnClickListener {
         @BindView(R.id.button3) Button button;
+    @BindView(R.id.lyricsTextView)
+    TextView lyricsView;
 
 
     public LevelOne() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,12 +55,18 @@ public class LevelOne extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_level_one, container, false);
         ButterKnife.bind(this, view);
         button.setOnClickListener(this);
+        String lyrics = getArguments().getString("lyrics", "");
+        lyricsView.setText(lyrics);
         return view;
     }
 
-    public static LevelOne newInstance(){
+    public static LevelOne newInstance(String lyrics){
         LevelOne levelOneFragment = new LevelOne();
+        Bundle args = new Bundle();
+        args.putString("lyrics", lyrics);
+        levelOneFragment.setArguments(args);
         return levelOneFragment;
+
     }
 
     @Override
