@@ -44,6 +44,7 @@ public class LevelOne extends Fragment implements View.OnClickListener {
     @BindView(R.id.lyricsTextView)
     TextView lyricsView;
     List verseList;
+    List finalModVerseList;
 
 
     public LevelOne() {
@@ -60,6 +61,7 @@ public class LevelOne extends Fragment implements View.OnClickListener {
         button.setOnClickListener(this);
         String lyrics = getArguments().getString("lyrics", "");
         verseList = new ArrayList<String>();
+        finalModVerseList = new ArrayList<String>();
         lyricsView.setText(lyrics);
         lyricsToVerseList(lyrics);
         return view;
@@ -84,9 +86,13 @@ public class LevelOne extends Fragment implements View.OnClickListener {
     }
 
     public void lyricsToVerseList(String lyrics){
+
         verseList= Arrays.asList(lyrics.split("\n"));
-        for(Object verse: verseList){
-            Log.d("VERSE", verse.toString());
+        int endOfFinalList=verseList.indexOf("...");
+        for (int i = 0; i < endOfFinalList; i++) {
+           if(!verseList.get(i).toString().equals("")){
+               finalModVerseList.add(verseList.get(i).toString());
+           }
         }
     }
 
