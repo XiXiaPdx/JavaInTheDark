@@ -4,6 +4,8 @@ package com.blueoxgym.javainthedark.Fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +19,7 @@ import com.blueoxgym.javainthedark.MusicMatch.MusicMatchClient;
 import com.blueoxgym.javainthedark.MusicMatch.ServiceGenerator;
 import com.blueoxgym.javainthedark.MusicMatch.EachTrack;
 import com.blueoxgym.javainthedark.R;
+import com.blueoxgym.javainthedark.adapter.VerseAdapter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,9 +43,8 @@ import static com.blueoxgym.javainthedark.Constants.MUSIC_MATCH_KEY;
  * A simple {@link Fragment} subclass.
  */
 public class LevelOne extends Fragment implements View.OnClickListener {
-        @BindView(R.id.button3) Button button;
-    @BindView(R.id.lyricsTextView)
-    TextView lyricsView;
+    @BindView(R.id.button3) Button button;
+    @BindView(R.id.versesRecycleView) RecyclerView versesRecycleView;
     List verseList;
     List finalModVerseList;
 
@@ -62,8 +64,11 @@ public class LevelOne extends Fragment implements View.OnClickListener {
         String lyrics = getArguments().getString("lyrics", "");
         verseList = new ArrayList<String>();
         finalModVerseList = new ArrayList<String>();
-        lyricsView.setText(lyrics);
         lyricsToVerseList(lyrics);
+        VerseAdapter verseAdapter = new VerseAdapter(finalModVerseList);
+        versesRecycleView.setAdapter(verseAdapter);
+        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        versesRecycleView.setLayoutManager(llm);
         return view;
     }
 
@@ -86,7 +91,6 @@ public class LevelOne extends Fragment implements View.OnClickListener {
     }
 
     public void lyricsToVerseList(String lyrics){
-
         verseList= Arrays.asList(lyrics.split("\n"));
         int endOfFinalList=verseList.indexOf("...");
         for (int i = 0; i < endOfFinalList; i++) {
@@ -95,6 +99,5 @@ public class LevelOne extends Fragment implements View.OnClickListener {
            }
         }
     }
-
 
 }
