@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -48,7 +49,6 @@ public class LevelOne extends Fragment implements View.OnClickListener {
     List verseList;
     List finalModVerseList;
 
-
     public LevelOne() {
         // Required empty public constructor
     }
@@ -66,9 +66,12 @@ public class LevelOne extends Fragment implements View.OnClickListener {
         finalModVerseList = new ArrayList<String>();
         lyricsToVerseList(lyrics);
         VerseAdapter verseAdapter = new VerseAdapter(finalModVerseList);
+
         versesRecycleView.setAdapter(verseAdapter);
-        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        LinearLayoutManager llm = new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL, false);
         versesRecycleView.setLayoutManager(llm);
+        PagerSnapHelper helper = new PagerSnapHelper();
+        helper.attachToRecyclerView(versesRecycleView);
         return view;
     }
 
