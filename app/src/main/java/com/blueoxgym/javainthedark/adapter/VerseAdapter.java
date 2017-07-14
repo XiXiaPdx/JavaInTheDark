@@ -3,11 +3,13 @@ package com.blueoxgym.javainthedark.adapter;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.blueoxgym.javainthedark.Fragments.LevelTwo;
 import com.blueoxgym.javainthedark.MainActivity;
 import com.blueoxgym.javainthedark.R;
 
@@ -23,6 +25,7 @@ import butterknife.ButterKnife;
 public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHolder> {
     private List<String> songVerses;
    private Context mContext;
+    private MainActivity main;
 
     @Override
     public VerseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -41,19 +44,26 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
         return songVerses.size();
     }
 
-    public class VerseViewHolder extends RecyclerView.ViewHolder{
+    public class VerseViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         @BindView(R.id.verseTextView) TextView verseTextView;
         @BindView(R.id.singleVerseCardView) CardView singleVerseCard;
         public VerseViewHolder (View v){
             super(v);
             ButterKnife.bind(this, v);
+            singleVerseCard.setOnClickListener(this);
             mContext= itemView.getContext();
         }
 
+        @Override
+        public void onClick(View v) {
+            String verse = songVerses.get(getAdapterPosition());
+            LevelTwo levelTwo = new LevelTwo();
+            main.loadFragment(levelTwo.newInstance(verse));
+        }
     }
 
-    public VerseAdapter (List songVerses){
+    public VerseAdapter (List songVerses, MainActivity activity){
         this.songVerses = songVerses;
-
+        main = activity;
     }
 }

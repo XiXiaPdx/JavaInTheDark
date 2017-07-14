@@ -44,7 +44,7 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
     @BindView(R.id.lyricTextView) TextView lyricText;
     @BindView(R.id.levelTextView) TextView levelText;
     private final int SPEECH_RECOGNITION_CODE = 1;
-    private final String lyric = "Now and then, I think of when we were together\nLike when you said you felt so happy you could die\nTold myself that you were right for me\n";
+    private String lyric;
 
 
     private String verseNoPunc;
@@ -65,6 +65,7 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_level_two, container, false);
         ButterKnife.bind(this, view);
         btnMicrophone.setOnClickListener(this);
+        lyric = getArguments().getString("oneVerse", "");
         setVerseNoPunc(lyric);
         lyricText.setText(lyric);
         levelText.setText("LEVEL "+ currentLevel);
@@ -72,8 +73,11 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
         return view;
     }
 
-    public static LevelTwo newInstance(){
+    public static LevelTwo newInstance(String verse){
         LevelTwo levelTwoFragment = new LevelTwo();
+        Bundle args = new Bundle();
+        args.putString("oneVerse", verse);
+        levelTwoFragment.setArguments(args);
         return levelTwoFragment;
     }
 

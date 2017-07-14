@@ -43,8 +43,7 @@ import static com.blueoxgym.javainthedark.Constants.MUSIC_MATCH_KEY;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class LevelOne extends Fragment implements View.OnClickListener {
-    @BindView(R.id.button3) Button button;
+public class LevelOne extends Fragment {
     @BindView(R.id.versesRecycleView) RecyclerView versesRecycleView;
     List verseList;
     List finalModVerseList;
@@ -60,12 +59,11 @@ public class LevelOne extends Fragment implements View.OnClickListener {
 
         View view = inflater.inflate(R.layout.fragment_level_one, container, false);
         ButterKnife.bind(this, view);
-        button.setOnClickListener(this);
         String lyrics = getArguments().getString("lyrics", "");
         verseList = new ArrayList<String>();
         finalModVerseList = new ArrayList<String>();
         lyricsToVerseList(lyrics);
-        VerseAdapter verseAdapter = new VerseAdapter(finalModVerseList);
+        VerseAdapter verseAdapter = new VerseAdapter(finalModVerseList, (MainActivity)getActivity());
 
         versesRecycleView.setAdapter(verseAdapter);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL, false);
@@ -82,15 +80,6 @@ public class LevelOne extends Fragment implements View.OnClickListener {
         levelOneFragment.setArguments(args);
         return levelOneFragment;
 
-    }
-
-    @Override
-    public void onClick(View v) {
-        if(v == button){
-            LevelTwo levelTwo = new LevelTwo();
-            //can not just import MainActivity and set to variable as global in this class. Must create a new instance of LoadFragment everytime or crashes on replace fragment
-            ((MainActivity)getActivity()).loadFragment(levelTwo.newInstance());
-        }
     }
 
     public void lyricsToVerseList(String lyrics){
