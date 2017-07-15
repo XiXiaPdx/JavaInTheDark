@@ -65,8 +65,6 @@ public class LogInFragment extends Fragment implements View.OnClickListener{
         firebaseAuth = FirebaseAuth.getInstance();
          toolbar = (Toolbar)getActivity().findViewById(R.id.toolbar);
         toolbar.setVisibility(View.GONE);
-        testArray = new ArrayList<String>(Arrays.asList("A", "B", "C"));
-
         return view;
     }
 
@@ -83,11 +81,6 @@ public class LogInFragment extends Fragment implements View.OnClickListener{
         }
         return valid;
     }
-
-//    Observable<String> observable = Observable.just("First event");
-//    Observable<Integer> oneToFiveObservable = Observable.range(0,5);
-//    Observable<ArrayList> observableArray = Observable.fromArray(testArray);
-
 
     @Override
     public void onClick(View v) {

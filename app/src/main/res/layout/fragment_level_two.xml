@@ -13,13 +13,6 @@
         >
 
         <TextView
-            android:layout_width="157dp"
-            android:layout_height="25dp"
-            android:text="Fragment Two"
-            tools:layout_editor_absoluteX="8dp"
-            tools:layout_editor_absoluteY="8dp" />
-
-        <TextView
             android:id="@+id/lyricTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -32,7 +25,9 @@
             app:layout_constraintBottom_toTopOf="@+id/txt_output"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp" />
 
         <TextView
             android:id="@+id/txt_output"
@@ -52,7 +47,9 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.752" />
+            app:layout_constraintVertical_bias="0.752"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp" />
 
         <ImageButton
             android:id="@+id/btn_mic"
@@ -60,7 +57,7 @@
             android:layout_height="80dp"
             android:background="@null"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_menu_camera"
+            android:src="@drawable/ic_mic_deep_orange_a700_48dp"
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginBottom="8dp"
             app:layout_constraintTop_toTopOf="parent"
@@ -69,7 +66,25 @@
             android:layout_marginRight="8dp"
             app:layout_constraintRight_toRightOf="parent"
             android:layout_marginLeft="8dp"
-            app:layout_constraintLeft_toLeftOf="parent" />
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp" />
+
+        <ProgressBar
+            android:id="@+id/progressBar1"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="173dp"
+            android:layout_height="40dp"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/btn_mic"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_mic" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -85,7 +100,9 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_mic" />
+            app:layout_constraintTop_toBottomOf="@+id/btn_mic"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp" />
 
         <TextView
             android:id="@+id/levelTextView"
@@ -102,7 +119,9 @@
             app:layout_constraintBottom_toTopOf="@+id/btn_mic"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txt_output" />
+            app:layout_constraintTop_toBottomOf="@+id/txt_output"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp" />
 
     </android.support.constraint.ConstraintLayout>
 

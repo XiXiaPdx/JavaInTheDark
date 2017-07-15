@@ -151,6 +151,7 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
             if (i < speechWords.length) {
                 // need to remove punctuation from this word
                 String currentWordNoPunc = removeWordPunc(referenceWords[i]);
+                Log.d("CURRENT WORD", currentWordNoPunc);
                 String speechWord = speechWords[i].toLowerCase();
                 if (speechWord.equals(currentWordNoPunc)
                         ) {

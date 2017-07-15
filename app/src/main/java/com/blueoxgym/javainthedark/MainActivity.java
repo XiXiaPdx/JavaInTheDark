@@ -139,7 +139,7 @@ public void makeAuthListener(){
 
     public void searchForSong(){
         MusicMatchClient client = ServiceGenerator.createService(MusicMatchClient.class);
-        Observable<LyricsModel> call = client.songSearch("Million Reasons Gaga", MUSIC_MATCH_KEY, "true", "5")
+        Observable<LyricsModel> call = client.songSearch("Sia Reaper", MUSIC_MATCH_KEY, "true", "5")
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread());
         Observer<LyricsModel> observer = new Observer<LyricsModel>() {
@@ -153,7 +153,11 @@ public void makeAuthListener(){
             public void onNext(LyricsModel value) {
                 Log.e(TAG, "onNext: "  + Thread.currentThread().getName());
                 List<EachTrack> trackList = value.getMessage().getBody().getTrack_list();
-                getLyricsCall(trackList.get(0).getTrack().getTrack_id());
+                try {
+                    getLyricsCall(trackList.get(0).getTrack().getTrack_id());
+                } catch (IndexOutOfBoundsException e){
+                    searchError();
+                }
             }
 
             @Override
@@ -168,6 +172,10 @@ public void makeAuthListener(){
 
         };
         call.subscribe(observer);
+    }
+
+    public void searchError() {
+        Log.d("ERROR", "Sorry, we don't have lyrics for that song.");
     }
 
     @Override
