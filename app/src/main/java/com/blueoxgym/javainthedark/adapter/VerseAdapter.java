@@ -42,10 +42,12 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
         holder.verseTextView.setText(songVerses.get(position));
         if (position == 0) {
             holder.arrowBack.setVisibility(View.INVISIBLE);
+        } else if (position == (songVerses.size()-1)){
+            holder.arrowForward.setVisibility(View.INVISIBLE);
         } else {
+            holder.arrowForward.setVisibility(View.VISIBLE);
             holder.arrowBack.setVisibility(View.VISIBLE);
         }
-
     }
 
     @Override
@@ -57,6 +59,7 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
         @BindView(R.id.verseTextView) TextView verseTextView;
         @BindView(R.id.singleVerseCardView) CardView singleVerseCard;
         @BindView(R.id.arrowBack) ImageButton arrowBack;
+        @BindView(R.id.arrowForward) ImageButton arrowForward;
         public VerseViewHolder (View v){
             super(v);
             ButterKnife.bind(this, v);

@@ -366,7 +366,7 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
         @Override
         public void onBeginningOfSpeech() {
             Log.d(TAG, "onBeginningOfSpeech");
-            micLevels.setMax(10);
+            micLevels.setMax(15);
         }
 
         @Override
@@ -384,6 +384,8 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
         @Override
         public void onEndOfSpeech() {
             Log.d(TAG, "onEndofSpeech");
+            micLevels.setProgress(6);
+            btnMicrophone.setBackgroundResource(R.drawable.circle_transparent);
             speech.stopListening();
         }
 
@@ -396,10 +398,6 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
         public void onResults(Bundle results) {
             String str = new String();
             Log.d(TAG, "onResults " + results);
-//
-//            ArrayList<String> result = results.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-
-
             ArrayList<String> data = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
             String text = data.get(0).toLowerCase();
             if (isInstaMatch(text)) {
@@ -423,6 +421,7 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
 
 }
     public void startSpeechToText(){
+        btnMicrophone.setBackgroundResource(R.drawable.circle_green);
         speech=SpeechRecognizer.createSpeechRecognizer(getContext());
         speech.setRecognitionListener(new listener());
         recognizerIntent= new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
