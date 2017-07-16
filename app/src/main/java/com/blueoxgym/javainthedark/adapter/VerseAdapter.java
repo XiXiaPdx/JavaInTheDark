@@ -7,6 +7,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.blueoxgym.javainthedark.Fragments.LevelTwo;
@@ -27,6 +29,7 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
    private Context mContext;
     private MainActivity main;
 
+
     @Override
     public VerseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_verse, parent, false);
@@ -37,6 +40,12 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
     @Override
     public void onBindViewHolder(VerseAdapter.VerseViewHolder holder, int position) {
         holder.verseTextView.setText(songVerses.get(position));
+        if (position == 0) {
+            holder.arrowBack.setVisibility(View.INVISIBLE);
+        } else {
+            holder.arrowBack.setVisibility(View.VISIBLE);
+        }
+
     }
 
     @Override
@@ -47,6 +56,7 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
     public class VerseViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         @BindView(R.id.verseTextView) TextView verseTextView;
         @BindView(R.id.singleVerseCardView) CardView singleVerseCard;
+        @BindView(R.id.arrowBack) ImageButton arrowBack;
         public VerseViewHolder (View v){
             super(v);
             ButterKnife.bind(this, v);
