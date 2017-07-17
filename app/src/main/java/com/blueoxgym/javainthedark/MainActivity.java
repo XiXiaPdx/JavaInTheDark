@@ -23,6 +23,8 @@ import android.view.MenuItem;
 
 import com.blueoxgym.javainthedark.Fragments.LevelOne;
 import com.blueoxgym.javainthedark.Fragments.LogInFragment;
+import com.blueoxgym.javainthedark.Fragments.LyricSearch;
+import com.blueoxgym.javainthedark.Fragments.MicFragment;
 import com.blueoxgym.javainthedark.MusicMatch.EachTrack;
 import com.blueoxgym.javainthedark.MusicMatch.LyricsModel;
 import com.blueoxgym.javainthedark.MusicMatch.MusicMatchClient;
@@ -84,7 +86,6 @@ public FirebaseAuth firebaseAuth;
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         makeAuthListener();
-        searchForSong();
     }
 
     public void loadFragment(Fragment fragment) {
@@ -97,19 +98,27 @@ public FirebaseAuth firebaseAuth;
         exitFade.setDuration(200);
         fragment.setExitTransition(exitFade);
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack(null).commit();
+        if(fragment.toString().contains("MicFragment")) {
+            fragmentManager.beginTransaction().replace(R.id.content2_frame, fragment).addToBackStack(null).commit();
+        } else {
+            fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack(null).commit();
+        }
     }
 
-public void makeAuthListener(){
- authListener = new FirebaseAuth.AuthStateListener(){
-     @Override
-     public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-        final FirebaseUser user = firebaseAuth.getCurrentUser();
-         if (user == null) {
-             loadFragment(LogInFragment.newInstance());
-         }
-     }
- };
+public void makeAuthListener() {
+    authListener = new FirebaseAuth.AuthStateListener() {
+        @Override
+        public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+            final FirebaseUser user = firebaseAuth.getCurrentUser();
+            if (user == null) {
+                loadFragment(LogInFragment.newInstance());
+            } else {
+                loadFragment(LyricSearch.newInstance());
+//                searchForSong();
+                loadFragment(MicFragment.newInstance());
+            }
+        }
+    };
 }
 
 

@@ -25,7 +25,17 @@
     <FrameLayout
         android:id="@+id/content_frame"
         android:layout_width="match_parent"
-        android:layout_height="402dp"
+        android:layout_height="418dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"></FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/content2_frame"
+        android:layout_width="match_parent"
+        android:layout_height="95dp"
+        android:layout_gravity="bottom"
+        android:background="@color/colorPrimary"
+        app:layout_anchor="@+id/content_frame"
+        app:layout_anchorGravity="bottom"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     </FrameLayout>

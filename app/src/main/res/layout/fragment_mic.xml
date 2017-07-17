@@ -1,0 +1,48 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.blueoxgym.javainthedark.Fragments.MicFragment">
+
+   <android.support.constraint.ConstraintLayout
+       android:layout_width="match_parent"
+    android:layout_height="match_parent">
+       <ImageButton
+           android:id="@+id/btn_mic"
+           android:layout_width="80dp"
+           android:layout_height="80dp"
+           android:background="@drawable/circle_transparent"
+           android:scaleType="centerCrop"
+           android:src="@drawable/ic_mic_deep_orange_a700_48dp"
+
+           app:layout_constraintBottom_toBottomOf="parent"
+           app:layout_constraintTop_toTopOf="parent"
+           app:layout_constraintVertical_bias="0.322"
+           android:layout_marginLeft="8dp"
+           android:layout_marginRight="8dp"
+           app:layout_constraintRight_toRightOf="parent"
+           app:layout_constraintLeft_toLeftOf="parent" />
+
+       <ProgressBar
+           android:id="@+id/progressBarMic"
+           style="@android:style/Widget.ProgressBar.Horizontal"
+           android:progressDrawable="@drawable/progress_scale_drawable"
+           android:progress="25"
+           android:layout_width="30dp"
+           android:layout_height="70dp"
+           android:layout_alignParentLeft="true"
+           android:layout_below="@+id/btn_mic"
+           android:paddingLeft="10dp"
+           android:paddingRight="10dp"
+           app:layout_constraintHorizontal_chainStyle="packed"
+           app:layout_constraintTop_toTopOf="@+id/btn_mic"
+           android:layout_marginTop="8dp"
+           app:layout_constraintBottom_toBottomOf="@+id/btn_mic"
+           android:layout_marginBottom="0dp"
+           android:layout_marginRight="80dp"
+           app:layout_constraintRight_toRightOf="@+id/btn_mic"
+           app:layout_constraintVertical_bias="1.0" />
+   </android.support.constraint.ConstraintLayout>
+
+</FrameLayout>
