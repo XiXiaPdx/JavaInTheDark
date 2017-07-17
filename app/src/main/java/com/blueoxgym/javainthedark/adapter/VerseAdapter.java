@@ -28,12 +28,14 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
     private List<String> songVerses;
    private Context mContext;
     private MainActivity main;
+    private CallMainLoadFragment callMainLoadFragment;
 
 
     @Override
     public VerseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_verse, parent, false);
         VerseViewHolder viewHolder = new VerseViewHolder(view);
+        this.callMainLoadFragment = (CallMainLoadFragment) mContext;
         return viewHolder;
     }
 
@@ -60,13 +62,17 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
         @Override
         public void onClick(View v) {
             String verse = songVerses.get(getAdapterPosition());
-            LevelTwo levelTwo = new LevelTwo();
-            main.loadFragment(levelTwo.newInstance(verse));
+
+            callMainLoadFragment.loadFragmentCall(verse);
         }
     }
 
     public VerseAdapter (List songVerses, MainActivity activity){
         this.songVerses = songVerses;
-        main = activity;
+        mContext = activity;
+    }
+
+    public static interface CallMainLoadFragment {
+        void loadFragmentCall(String verse);
     }
 }

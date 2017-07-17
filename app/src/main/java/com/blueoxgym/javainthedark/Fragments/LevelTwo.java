@@ -56,7 +56,6 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
     ProgressBar micLevels;
     private SpeechRecognizer speech = null;
     private Intent recognizerIntent;
-    private final int SPEECH_RECOGNITION_CODE = 1;
     private String lyric;
     private String verseNoPunc;
     private int currentLevel = 1;

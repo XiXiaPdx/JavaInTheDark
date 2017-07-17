@@ -21,7 +21,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.blueoxgym.javainthedark.Fragments.LevelOne;
+import com.blueoxgym.javainthedark.Fragments.LevelTwo;
+import com.blueoxgym.javainthedark.Fragments.VersesList;
 import com.blueoxgym.javainthedark.Fragments.LogInFragment;
 import com.blueoxgym.javainthedark.Fragments.LyricSearch;
 import com.blueoxgym.javainthedark.Fragments.MicFragment;
@@ -29,9 +30,7 @@ import com.blueoxgym.javainthedark.MusicMatch.EachTrack;
 import com.blueoxgym.javainthedark.MusicMatch.LyricsModel;
 import com.blueoxgym.javainthedark.MusicMatch.MusicMatchClient;
 import com.blueoxgym.javainthedark.MusicMatch.ServiceGenerator;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
+import com.blueoxgym.javainthedark.adapter.VerseAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -43,13 +42,12 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
-import static android.content.ContentValues.TAG;
 import static com.blueoxgym.javainthedark.Constants.ARTIST_NAME;
 import static com.blueoxgym.javainthedark.Constants.MUSIC_MATCH_KEY;
 import static com.blueoxgym.javainthedark.Constants.SONG_NAME;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, VerseAdapter.CallMainLoadFragment {
 
 
     public static final String TAG = "In Observer";
@@ -114,7 +112,6 @@ public void makeAuthListener() {
                 loadFragment(LogInFragment.newInstance());
             } else {
                 loadFragment(LyricSearch.newInstance());
-//                searchForSong();
                 loadFragment(MicFragment.newInstance());
             }
         }
@@ -137,7 +134,7 @@ public void makeAuthListener() {
 
             @Override
             public void onNext(LyricsModel value) {
-                loadFragment(LevelOne.newInstance(value.getMessage().getBody().getLyrics().getLyrics_body()));
+                loadFragment(VersesList.newInstance(value.getMessage().getBody().getLyrics().getLyrics_body()));
                 Log.e(TAG, "onNext: " +  value.getMessage().getBody().getLyrics().getLyrics_body()+ Thread.currentThread().getName());
             }
 
@@ -281,4 +278,9 @@ public void makeAuthListener() {
         }
     }
 
+    @Override
+    public void loadFragmentCall(String verse) {
+        LevelTwo levelTwo = new LevelTwo();
+        loadFragment(levelTwo.newInstance(verse));
+    }
 }
