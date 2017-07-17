@@ -15,13 +15,12 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/versesRecycleView"
             android:layout_width="match_parent"
-            android:layout_height="413dp"
-            android:layout_marginBottom="8dp"
+            android:layout_height="400dp"
+            android:layout_marginBottom="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            tools:layout_editor_absoluteY="90dp"></android.support.v7.widget.RecyclerView>
+            app:layout_constraintRight_toRightOf="parent"></android.support.v7.widget.RecyclerView>
 
         <TextView
             android:id="@+id/songNameTextView"
@@ -31,10 +30,11 @@
             android:textAlignment="center"
             android:textColor="@color/LightGreen"
             android:textSize="24sp"
-            app:layout_constraintHorizontal_bias="0.007"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="4dp" />
 
         <TextView
             android:id="@+id/artistTextView"
@@ -52,52 +52,42 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             app:srcCompat="@drawable/ic_star_border_white_18dp"
-            app:layout_constraintBottom_toTopOf="@+id/versesRecycleView"
             app:layout_constraintTop_toBottomOf="@+id/artistTextView"
             app:layout_constraintRight_toLeftOf="@+id/levelTwoStar"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintVertical_bias="0.216" />
+            app:layout_constraintHorizontal_chainStyle="packed" />
         <ImageView
             android:id="@+id/levelTwoStar"
             android:layout_width="24dp"
             android:layout_height="24dp"
             app:srcCompat="@drawable/ic_star_border_white_18dp"
-            app:layout_constraintBottom_toTopOf="@+id/versesRecycleView"
             app:layout_constraintTop_toBottomOf="@+id/artistTextView"
             app:layout_constraintRight_toLeftOf="@+id/levelThreeStar"
-            app:layout_constraintLeft_toRightOf="@+id/levelOneStar"
-            app:layout_constraintVertical_bias="0.216" />
+            app:layout_constraintLeft_toRightOf="@+id/levelOneStar" />
         <ImageView
             android:id="@+id/levelThreeStar"
             android:layout_width="24dp"
             android:layout_height="24dp"
             app:srcCompat="@drawable/ic_star_border_white_18dp"
-            app:layout_constraintBottom_toTopOf="@+id/versesRecycleView"
             app:layout_constraintTop_toBottomOf="@+id/artistTextView"
             app:layout_constraintRight_toLeftOf="@+id/levelFourStar"
-            app:layout_constraintLeft_toRightOf="@+id/levelTwoStar"
-            app:layout_constraintVertical_bias="0.216" />
+            app:layout_constraintLeft_toRightOf="@+id/levelTwoStar" />
         <ImageView
             android:id="@+id/levelFourStar"
             android:layout_width="24dp"
             android:layout_height="24dp"
             app:srcCompat="@drawable/ic_star_border_white_18dp"
-            app:layout_constraintBottom_toTopOf="@+id/versesRecycleView"
             app:layout_constraintTop_toBottomOf="@+id/artistTextView"
             app:layout_constraintRight_toLeftOf="@+id/levelFiveStar"
-            app:layout_constraintLeft_toRightOf="@+id/levelThreeStar"
-            app:layout_constraintVertical_bias="0.216" />
+            app:layout_constraintLeft_toRightOf="@+id/levelThreeStar" />
         <ImageView
             android:id="@+id/levelFiveStar"
             android:layout_width="24dp"
             android:layout_height="24dp"
             app:srcCompat="@drawable/ic_star_border_white_18dp"
-            app:layout_constraintBottom_toTopOf="@+id/versesRecycleView"
             app:layout_constraintTop_toBottomOf="@+id/artistTextView"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintLeft_toRightOf="@+id/levelFourStar"
-            app:layout_constraintVertical_bias="0.216" />
+            app:layout_constraintLeft_toRightOf="@+id/levelFourStar" />
     </android.support.constraint.ConstraintLayout>
 
 </FrameLayout>

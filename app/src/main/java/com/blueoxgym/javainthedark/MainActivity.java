@@ -149,7 +149,7 @@ public void makeAuthListener(){
 
     public void searchForSong(){
         MusicMatchClient client = ServiceGenerator.createService(MusicMatchClient.class);
-        Observable<LyricsModel> call = client.songSearch("Sia Reaper", MUSIC_MATCH_KEY, "true", "5")
+        Observable<LyricsModel> call = client.songSearch("Waving Through A Window Ben Platt", MUSIC_MATCH_KEY, "true", "5")
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread());
         Observer<LyricsModel> observer = new Observer<LyricsModel>() {
