@@ -49,6 +49,8 @@ public class MainActivity extends AppCompatActivity
     public static final String TAG = "In Observer";
 public FirebaseAuth firebaseAuth;
     public FirebaseAuth.AuthStateListener authListener;
+    private String trackName;
+    private String artistName;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,7 +120,7 @@ public void makeAuthListener(){
 
             @Override
             public void onNext(LyricsModel value) {
-                loadFragment(LevelOne.newInstance(value.getMessage().getBody().getLyrics().getLyrics_body()));
+                loadFragment(LevelOne.newInstance(value.getMessage().getBody().getLyrics().getLyrics_body(), trackName, artistName));
                 Log.e(TAG, "onNext: " +  value.getMessage().getBody().getLyrics().getLyrics_body()+ Thread.currentThread().getName());
             }
 
@@ -155,6 +157,8 @@ public void makeAuthListener(){
                 List<EachTrack> trackList = value.getMessage().getBody().getTrack_list();
                 try {
                     getLyricsCall(trackList.get(0).getTrack().getTrack_id());
+                    trackName = trackList.get(0).getTrack().getTrack_name();
+                    artistName = trackList.get(0).getTrack().getArtist_name();
                 } catch (IndexOutOfBoundsException e){
                     searchError();
                 }
@@ -217,7 +221,6 @@ public void makeAuthListener(){
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
-            loadFragment(LevelOne.newInstance("Loaded from Nav drawer test"));
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {

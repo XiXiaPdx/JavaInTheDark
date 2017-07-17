@@ -101,40 +101,6 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
 
     }
 
-//    public void startSpeechToText(){
-//        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-//        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-//        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-//        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Start Speaking...");
-//        try {
-//            startActivityForResult(intent, SPEECH_RECOGNITION_CODE);
-//        } catch (ActivityNotFoundException a) {
-//            Toast.makeText(getActivity(),
-//                    "Sorry! Speech recognition is not supported in this device.",
-//                    Toast.LENGTH_SHORT).show();
-//        }
-//    }
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        switch (requestCode) {
-//            case SPEECH_RECOGNITION_CODE: {
-//                if (resultCode == RESULT_OK && null != data) {
-//                    ArrayList<String> result = data
-//                            .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-//                    String text = result.get(0).toLowerCase();
-//                    if (isInstaMatch(text)) {
-//                        currentLevel += 1;
-//                        startLevel();
-//                    } else {
-//                        checkForMatch(text);
-//                    }
-//                    break;
-//                }
-//            }
-//        }
-//    }
-
     public void checkForMatch(String speech) {
         if (currentLevel == 1) {
             txtOutput.setText("Please try again..." + speech);
@@ -257,7 +223,8 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
     }
 
 
-    public void setHintWords(String tempWord) {
+    public void setHintWords(String word) {
+        String tempWord = removeWordPunc(word);
         String newDisplayWord = "";
         switch (currentLevel) {
             case 2:
@@ -428,7 +395,7 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
         recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, "en-US");
         recognizerIntent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, getActivity().getPackageName());
         recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        recognizerIntent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 10);
+        recognizerIntent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 5);
         speech.startListening(recognizerIntent);
     }
 

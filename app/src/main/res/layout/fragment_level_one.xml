@@ -14,17 +14,42 @@
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/versesRecycleView"
-            android:layout_width="0dp"
-            android:layout_height="282dp"
+            android:layout_width="380dp"
+            android:layout_height="407dp"
             android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.431"
-            ></android.support.v7.widget.RecyclerView>
+            app:layout_constraintVertical_bias="0.75"></android.support.v7.widget.RecyclerView>
+
+        <TextView
+            android:id="@+id/songNameTextView"
+            android:layout_width="127dp"
+            android:layout_height="28dp"
+            android:layout_marginTop="7dp"
+            android:text="TextView"
+            android:textAlignment="center"
+            android:textColor="@color/LightGreen"
+            android:textSize="24sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintHorizontal_bias="0.501" />
+
+        <TextView
+            android:id="@+id/artistTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:text="TextView"
+            android:textAlignment="center"
+            android:textColor="@color/LightGreen"
+            android:textSize="18sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/songNameTextView" />
     </android.support.constraint.ConstraintLayout>
 
 </FrameLayout>
