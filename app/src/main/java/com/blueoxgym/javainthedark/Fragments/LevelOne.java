@@ -68,22 +68,9 @@ public class LevelOne extends Fragment {
         View view = inflater.inflate(R.layout.fragment_level_one, container, false);
         ButterKnife.bind(this, view);
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-
-        String lyrics = getArguments().getString("lyrics", "");
-        String song = '"'+mSharedPreferences.getString(SONG_NAME, null)+'"';
-        String artist = "by "+mSharedPreferences.getString(ARTIST_NAME, null);
-        songName.setText(song);
-        artistName.setText(artist);
-        verseList = new ArrayList<String>();
-        finalModVerseList = new ArrayList<String>();
-        lyricsToVerseList(lyrics);
-        VerseAdapter verseAdapter = new VerseAdapter(finalModVerseList, (MainActivity)getActivity());
-
-        versesRecycleView.setAdapter(verseAdapter);
-        LinearLayoutManager llm = new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL, false);
-        versesRecycleView.setLayoutManager(llm);
-        PagerSnapHelper helper = new PagerSnapHelper();
-        helper.attachToRecyclerView(versesRecycleView);
+        displayArtistAndSongName();
+        lyricsToVerseList();
+        setVersesIntoRecyclerView();
         return view;
     }
 
@@ -96,14 +83,41 @@ public class LevelOne extends Fragment {
 
     }
 
-    public void lyricsToVerseList(String lyrics){
+    public void lyricsToVerseList(){
+        String lyrics = getArguments().getString("lyrics", "");
+        verseList = new ArrayList<String>();
+        finalModVerseList = new ArrayList<String>();
         verseList= Arrays.asList(lyrics.split("\n"));
         int endOfFinalList=verseList.indexOf("...");
         for (int i = 0; i < endOfFinalList; i++) {
            if(!verseList.get(i).toString().equals("")){
-               finalModVerseList.add(verseList.get(i).toString());
+               String addThisVerse = verseList.get(i).toString();
+               //check on length of verse, if too short add next, check again
+               int numberOfWords = addThisVerse.split(" ").length;
+               while (numberOfWords < 10 && i < endOfFinalList) {
+                   i++;
+                   addThisVerse += " " + verseList.get(i).toString();
+                   numberOfWords = addThisVerse.split(" ").length;
+               }
+               finalModVerseList.add(addThisVerse);
+//               finalModVerseList.add(verseList.get(i).toString());
            }
         }
     }
 
+    public void displayArtistAndSongName(){
+        String song = '"'+mSharedPreferences.getString(SONG_NAME, null)+'"';
+        String artist = "by "+mSharedPreferences.getString(ARTIST_NAME, null);
+        songName.setText(song);
+        artistName.setText(artist);
+    }
+
+    public void setVersesIntoRecyclerView(){
+        VerseAdapter verseAdapter = new VerseAdapter(finalModVerseList, (MainActivity)getActivity());
+        versesRecycleView.setAdapter(verseAdapter);
+        LinearLayoutManager llm = new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL, false);
+        versesRecycleView.setLayoutManager(llm);
+        PagerSnapHelper helper = new PagerSnapHelper();
+        helper.attachToRecyclerView(versesRecycleView);
+    }
 }
