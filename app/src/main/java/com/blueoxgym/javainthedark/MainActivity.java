@@ -1,6 +1,8 @@
 package com.blueoxgym.javainthedark;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -40,7 +42,9 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 import static android.content.ContentValues.TAG;
+import static com.blueoxgym.javainthedark.Constants.ARTIST_NAME;
 import static com.blueoxgym.javainthedark.Constants.MUSIC_MATCH_KEY;
+import static com.blueoxgym.javainthedark.Constants.SONG_NAME;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -51,10 +55,14 @@ public FirebaseAuth firebaseAuth;
     public FirebaseAuth.AuthStateListener authListener;
     private String trackName;
     private String artistName;
+    private SharedPreferences mSharedPreferences;
+    private SharedPreferences.Editor mEditor;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        mEditor = mSharedPreferences.edit();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         firebaseAuth = FirebaseAuth.getInstance();
@@ -120,7 +128,7 @@ public void makeAuthListener(){
 
             @Override
             public void onNext(LyricsModel value) {
-                loadFragment(LevelOne.newInstance(value.getMessage().getBody().getLyrics().getLyrics_body(), trackName, artistName));
+                loadFragment(LevelOne.newInstance(value.getMessage().getBody().getLyrics().getLyrics_body()));
                 Log.e(TAG, "onNext: " +  value.getMessage().getBody().getLyrics().getLyrics_body()+ Thread.currentThread().getName());
             }
 
@@ -159,6 +167,8 @@ public void makeAuthListener(){
                     getLyricsCall(trackList.get(0).getTrack().getTrack_id());
                     trackName = trackList.get(0).getTrack().getTrack_name();
                     artistName = trackList.get(0).getTrack().getArtist_name();
+                    addSongAndArtistShared(artistName, trackName);
+
                 } catch (IndexOutOfBoundsException e){
                     searchError();
                 }
@@ -176,6 +186,11 @@ public void makeAuthListener(){
 
         };
         call.subscribe(observer);
+    }
+
+    public void addSongAndArtistShared(String artist, String song){
+        mEditor.putString(ARTIST_NAME, artist).apply();
+        mEditor.putString(SONG_NAME, song).apply();
     }
 
     public void searchError() {

@@ -1,7 +1,9 @@
 package com.blueoxgym.javainthedark.Fragments;
 
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -38,7 +40,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.content.ContentValues.TAG;
+import static com.blueoxgym.javainthedark.Constants.ARTIST_NAME;
 import static com.blueoxgym.javainthedark.Constants.MUSIC_MATCH_KEY;
+import static com.blueoxgym.javainthedark.Constants.SONG_NAME;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -47,6 +51,8 @@ public class LevelOne extends Fragment {
     @BindView(R.id.versesRecycleView) RecyclerView versesRecycleView;
     @BindView(R.id.songNameTextView) TextView songName;
     @BindView(R.id.artistTextView)TextView artistName;
+    private SharedPreferences mSharedPreferences;
+    private String mRecentAddress;
     List verseList;
     List finalModVerseList;
 
@@ -61,9 +67,13 @@ public class LevelOne extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_level_one, container, false);
         ButterKnife.bind(this, view);
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
         String lyrics = getArguments().getString("lyrics", "");
-        songName.setText('"'+getArguments().getString("songName", "")+'"');
-        artistName.setText("by "+getArguments().getString("artistName", ""));
+        String song = '"'+mSharedPreferences.getString(SONG_NAME, null)+'"';
+        String artist = "by "+mSharedPreferences.getString(ARTIST_NAME, null);
+        songName.setText(song);
+        artistName.setText(artist);
         verseList = new ArrayList<String>();
         finalModVerseList = new ArrayList<String>();
         lyricsToVerseList(lyrics);
@@ -77,12 +87,10 @@ public class LevelOne extends Fragment {
         return view;
     }
 
-    public static LevelOne newInstance(String lyrics, String songName, String artistName){
+    public static LevelOne newInstance(String lyrics){
         LevelOne levelOneFragment = new LevelOne();
         Bundle args = new Bundle();
         args.putString("lyrics", lyrics);
-        args.putString("songName", songName);
-        args.putString("artistName", artistName);
         levelOneFragment.setArguments(args);
         return levelOneFragment;
 
