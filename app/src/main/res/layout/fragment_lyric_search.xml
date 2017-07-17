@@ -16,7 +16,7 @@
             android:layout_height="153dp"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
-            android:layout_marginTop="66dp"
+            android:layout_marginTop="28dp"
             android:text="Tap mic and say the song you want to memorize."
             android:textColor="@color/colorAccent"
             android:textSize="36sp"
@@ -26,8 +26,8 @@
 
         <TextView
             android:id="@+id/examplePhraseTextView"
-            android:layout_width="323dp"
-            android:layout_height="121dp"
+            android:layout_width="327dp"
+            android:layout_height="152dp"
             android:layout_marginBottom="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"

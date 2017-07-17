@@ -6,8 +6,8 @@
 
     <string name="action_settings">Settings</string>
     <string name="action_fun">Fun</string>
-    <string name="example_instructions">For best results, say Song Name by Artist. Example:
-        \n\nMillion Reasons by Lady Gaga</string>
+    <string name="example_instructions">For best results, say just the Song Name and Artist. Example:
+        \n\nHey Jude Beatles</string>
 
 
 
