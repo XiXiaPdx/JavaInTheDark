@@ -47,7 +47,7 @@ import static com.blueoxgym.javainthedark.Constants.MUSIC_MATCH_KEY;
 import static com.blueoxgym.javainthedark.Constants.SONG_NAME;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, VerseAdapter.CallMainLoadFragment {
+        implements NavigationView.OnNavigationItemSelectedListener, VerseAdapter.CallMainLoadFragment, MicFragment.CallMainLoadVerseFragment {
 
 
     public static final String TAG = "In Observer";
@@ -119,80 +119,80 @@ public void makeAuthListener() {
 }
 
 
-    public void getLyricsCall(int songId){
-        MusicMatchClient client = ServiceGenerator.createService(MusicMatchClient.class);
-        Observable<LyricsModel> call = client.songLyrics(Integer.toString(songId), MUSIC_MATCH_KEY)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread());
-        //observer
-        Observer<LyricsModel> observer = new Observer<LyricsModel>() {
-
-            @Override
-            public void onSubscribe(Disposable d) {
-                Log.e(TAG, "onSubscribe" + Thread.currentThread().getName());
-            }
-
-            @Override
-            public void onNext(LyricsModel value) {
-                loadFragment(VersesList.newInstance(value.getMessage().getBody().getLyrics().getLyrics_body()));
-                Log.e(TAG, "onNext: " +  value.getMessage().getBody().getLyrics().getLyrics_body()+ Thread.currentThread().getName());
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Log.e(TAG, "onError: ");
-            }
-
-            @Override
-            public void onComplete() {
-                Log.e(TAG, "onComplete: All Done!" + Thread.currentThread().getName());
-            }
-
-        };
-        call.subscribe(observer);
-    }
-
-
-    public void searchForSong(){
-        MusicMatchClient client = ServiceGenerator.createService(MusicMatchClient.class);
-        Observable<LyricsModel> call = client.songSearch("Waving Through A Window Ben Platt", MUSIC_MATCH_KEY, "true", "5")
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread());
-        Observer<LyricsModel> observer = new Observer<LyricsModel>() {
-
-            @Override
-            public void onSubscribe(Disposable d) {
-                Log.e(TAG, "onSubscribe" + Thread.currentThread().getName());
-            }
-
-            @Override
-            public void onNext(LyricsModel value) {
-                Log.e(TAG, "onNext: "  + Thread.currentThread().getName());
-                List<EachTrack> trackList = value.getMessage().getBody().getTrack_list();
-                try {
-                    getLyricsCall(trackList.get(0).getTrack().getTrack_id());
-                    trackName = trackList.get(0).getTrack().getTrack_name();
-                    artistName = trackList.get(0).getTrack().getArtist_name();
-                    addSongAndArtistShared(artistName, trackName);
-
-                } catch (IndexOutOfBoundsException e){
-                    searchError();
-                }
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Log.e(TAG, "onError: ");
-            }
-
-            @Override
-            public void onComplete() {
-                Log.e(TAG, "onComplete: All Done!" + Thread.currentThread().getName());
-            }
-
-        };
-        call.subscribe(observer);
-    }
+//    public void getLyricsCall(int songId){
+//        MusicMatchClient client = ServiceGenerator.createService(MusicMatchClient.class);
+//        Observable<LyricsModel> call = client.songLyrics(Integer.toString(songId), MUSIC_MATCH_KEY)
+//                .subscribeOn(Schedulers.newThread())
+//                .observeOn(AndroidSchedulers.mainThread());
+//        //observer
+//        Observer<LyricsModel> observer = new Observer<LyricsModel>() {
+//
+//            @Override
+//            public void onSubscribe(Disposable d) {
+//                Log.e(TAG, "onSubscribe" + Thread.currentThread().getName());
+//            }
+//
+//            @Override
+//            public void onNext(LyricsModel value) {
+//                loadFragment(VersesList.newInstance(value.getMessage().getBody().getLyrics().getLyrics_body()));
+//                Log.e(TAG, "onNext: " +  value.getMessage().getBody().getLyrics().getLyrics_body()+ Thread.currentThread().getName());
+//            }
+//
+//            @Override
+//            public void onError(Throwable e) {
+//                Log.e(TAG, "onError: ");
+//            }
+//
+//            @Override
+//            public void onComplete() {
+//                Log.e(TAG, "onComplete: All Done!" + Thread.currentThread().getName());
+//            }
+//
+//        };
+//        call.subscribe(observer);
+//    }
+//
+//
+//    public void searchForSong(){
+//        MusicMatchClient client = ServiceGenerator.createService(MusicMatchClient.class);
+//        Observable<LyricsModel> call = client.songSearch("Waving Through A Window Ben Platt", MUSIC_MATCH_KEY, "true", "5")
+//                .subscribeOn(Schedulers.newThread())
+//                .observeOn(AndroidSchedulers.mainThread());
+//        Observer<LyricsModel> observer = new Observer<LyricsModel>() {
+//
+//            @Override
+//            public void onSubscribe(Disposable d) {
+//                Log.e(TAG, "onSubscribe" + Thread.currentThread().getName());
+//            }
+//
+//            @Override
+//            public void onNext(LyricsModel value) {
+//                Log.e(TAG, "onNext: "  + Thread.currentThread().getName());
+//                List<EachTrack> trackList = value.getMessage().getBody().getTrack_list();
+//                try {
+//                    getLyricsCall(trackList.get(0).getTrack().getTrack_id());
+//                    trackName = trackList.get(0).getTrack().getTrack_name();
+//                    artistName = trackList.get(0).getTrack().getArtist_name();
+//                    addSongAndArtistShared(artistName, trackName);
+//
+//                } catch (IndexOutOfBoundsException e){
+//                    searchError();
+//                }
+//            }
+//
+//            @Override
+//            public void onError(Throwable e) {
+//                Log.e(TAG, "onError: ");
+//            }
+//
+//            @Override
+//            public void onComplete() {
+//                Log.e(TAG, "onComplete: All Done!" + Thread.currentThread().getName());
+//            }
+//
+//        };
+//        call.subscribe(observer);
+//    }
 
     public void addSongAndArtistShared(String artist, String song){
         mEditor.putString(ARTIST_NAME, artist).apply();
@@ -282,5 +282,11 @@ public void makeAuthListener() {
     public void loadFragmentCall(String verse) {
         LevelTwo levelTwo = new LevelTwo();
         loadFragment(levelTwo.newInstance(verse));
+    }
+
+    @Override
+    public void loadVerseFragmentCall(String lyrics) {
+        VersesList versesList = new VersesList();
+        loadFragment(versesList.newInstance(lyrics));
     }
 }

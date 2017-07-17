@@ -27,7 +27,6 @@ import butterknife.ButterKnife;
 public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHolder> {
     private List<String> songVerses;
    private Context mContext;
-    private MainActivity main;
     private CallMainLoadFragment callMainLoadFragment;
 
 
