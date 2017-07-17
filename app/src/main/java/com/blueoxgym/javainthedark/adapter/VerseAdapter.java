@@ -40,14 +40,6 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
     @Override
     public void onBindViewHolder(VerseAdapter.VerseViewHolder holder, int position) {
         holder.verseTextView.setText(songVerses.get(position));
-        if (position == 0) {
-            holder.arrowBack.setVisibility(View.INVISIBLE);
-        } else if (position == (songVerses.size()-1)){
-            holder.arrowForward.setVisibility(View.INVISIBLE);
-        } else {
-            holder.arrowForward.setVisibility(View.VISIBLE);
-            holder.arrowBack.setVisibility(View.VISIBLE);
-        }
     }
 
     @Override
@@ -58,8 +50,6 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
     public class VerseViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         @BindView(R.id.verseTextView) TextView verseTextView;
         @BindView(R.id.singleVerseCardView) CardView singleVerseCard;
-        @BindView(R.id.arrowBack) ImageButton arrowBack;
-        @BindView(R.id.arrowForward) ImageButton arrowForward;
         public VerseViewHolder (View v){
             super(v);
             ButterKnife.bind(this, v);
