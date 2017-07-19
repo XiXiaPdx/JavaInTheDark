@@ -14,13 +14,15 @@
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/versesRecycleView"
-            android:layout_width="match_parent"
-            android:layout_height="400dp"
-            android:layout_marginBottom="20dp"
+            android:layout_width="384dp"
+            android:layout_height="395dp"
+            android:layout_marginBottom="33dp"
+            android:layout_marginTop="100dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"></android.support.v7.widget.RecyclerView>
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/levelThreeStar"></android.support.v7.widget.RecyclerView>
 
         <TextView
             android:id="@+id/songNameTextView"

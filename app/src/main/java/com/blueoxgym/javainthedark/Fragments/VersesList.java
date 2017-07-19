@@ -48,7 +48,7 @@ public class VersesList extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        View view = inflater.inflate(R.layout.fragment_level_one, container, false);
+        View view = inflater.inflate(R.layout.fragment_verses_list, container, false);
         ButterKnife.bind(this, view);
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         displayArtistAndSongName();
