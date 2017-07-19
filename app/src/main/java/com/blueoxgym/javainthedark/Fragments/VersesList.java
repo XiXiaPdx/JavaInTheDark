@@ -40,7 +40,6 @@ public class VersesList extends Fragment {
     List finalModVerseList;
     // temporary
     private SharedPreferences.Editor editor;
-
     public VersesList() {
         // Required empty public constructor
     }
