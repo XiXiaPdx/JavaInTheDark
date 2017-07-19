@@ -60,9 +60,11 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
 
         @Override
         public void onClick(View v) {
-            String verse = songVerses.get(getAdapterPosition());
+            songVerses.set((getAdapterPosition()), "Test test test");
+            notifyItemChanged(getAdapterPosition());
+//            String verse = songVerses.get(getAdapterPosition());
+//            callMainLoadFragment.loadFragmentCall(verse);
 
-            callMainLoadFragment.loadFragmentCall(verse);
         }
     }
 
