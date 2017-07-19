@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,9 +36,10 @@ public class VersesList extends Fragment {
     @BindView(R.id.songNameTextView) TextView songName;
     @BindView(R.id.artistTextView)TextView artistName;
     private SharedPreferences mSharedPreferences;
-    private String mRecentAddress;
     List verseList;
     List finalModVerseList;
+    // temporary
+    private SharedPreferences.Editor editor;
 
     public VersesList() {
         // Required empty public constructor
@@ -51,9 +53,12 @@ public class VersesList extends Fragment {
         View view = inflater.inflate(R.layout.fragment_verses_list, container, false);
         ButterKnife.bind(this, view);
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        editor=mSharedPreferences.edit();
         displayArtistAndSongName();
         lyricsToVerseList();
         setVersesIntoRecyclerView();
+        //temp
+        storeAllVerseLevels();
         return view;
     }
 
@@ -102,5 +107,19 @@ public class VersesList extends Fragment {
         versesRecycleView.setLayoutManager(llm);
         PagerSnapHelper helper = new PagerSnapHelper();
         helper.attachToRecyclerView(versesRecycleView);
+    }
+
+    private void storeLevel(int indexNumber) {
+        editor.putInt(String.valueOf(indexNumber), 1).apply();
+    }
+
+    private void storeAllVerseLevels(){
+        for (int i=0; i< finalModVerseList.size();i++){
+            storeLevel(i);
+        }
+        for (int j=0; j< finalModVerseList.size();j++){
+            String level = String.valueOf(mSharedPreferences.getInt(String.valueOf(j), -1));
+            Log.d("In Shared Preferences  ", "Verse "+j+" Level "+level);
+        }
     }
 }

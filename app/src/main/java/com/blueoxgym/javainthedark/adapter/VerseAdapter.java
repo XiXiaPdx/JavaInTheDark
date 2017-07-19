@@ -1,6 +1,8 @@
 package com.blueoxgym.javainthedark.adapter;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -28,6 +30,7 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
     private List<String> songVerses;
    private Context mContext;
     private CallMainLoadFragment callMainLoadFragment;
+    private String savedOriginalVerse;
 
 
     @Override
@@ -60,6 +63,7 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
 
         @Override
         public void onClick(View v) {
+            savedOriginalVerse = songVerses.get(getAdapterPosition());
             songVerses.set((getAdapterPosition()), "Test test test");
             notifyItemChanged(getAdapterPosition());
 //            String verse = songVerses.get(getAdapterPosition());
