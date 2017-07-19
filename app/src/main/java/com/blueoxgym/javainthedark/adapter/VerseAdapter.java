@@ -31,6 +31,9 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
    private Context mContext;
     private CallMainLoadFragment callMainLoadFragment;
     private String savedOriginalVerse;
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
+
 
 
     @Override
@@ -38,6 +41,8 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_verse, parent, false);
         VerseViewHolder viewHolder = new VerseViewHolder(view);
         this.callMainLoadFragment = (CallMainLoadFragment) mContext;
+        sharedPreferences=PreferenceManager.getDefaultSharedPreferences(mContext);
+        editor=sharedPreferences.edit();
         return viewHolder;
     }
 
