@@ -31,6 +31,7 @@ import butterknife.ButterKnife;
 
 public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHolder> {
     private List<String> songVerses;
+    private ArrayList<String> originalSongVerses = new ArrayList<String>();
    private Context mContext;
     private CallMainLoadFragment callMainLoadFragment;
     private String savedOriginalVerse;
@@ -48,10 +49,13 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
     private Boolean gameOn = false;
     VerseViewHolder viewHolder;
 
-    public VerseAdapter (List songVerses, MainActivity activity, RecyclerView versesRecycler){
+    public VerseAdapter (List<String> songVerses, MainActivity activity, RecyclerView versesRecycler){
         this.songVerses = songVerses;
         mContext = activity;
         this.versesRecycler = versesRecycler;
+        for(int i=0; i < songVerses.size(); i++){
+            originalSongVerses.add(i, songVerses.get(i));
+        }
     }
 
     @Override
@@ -77,7 +81,7 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
     public void resetVerse(){
         if (gameOn) {
             gameOn = false;
-            songVerses.set(savedOriginalPosition, savedOriginalVerse);
+            songVerses.set(savedOriginalPosition, originalSongVerses.get(savedOriginalPosition));
             notifyItemChanged(savedOriginalPosition);
         }
     }
@@ -98,8 +102,8 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
         @Override
         public void onClick(View v) {
             savedOriginalPosition = getAdapterPosition();
-            savedOriginalVerse = songVerses.get(savedOriginalPosition);
             startLevel();
+            // logic issue here with levels and saving original verse.
         }
 
 
@@ -132,6 +136,7 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
             String displayWordsIntoString = TextUtils.join(" ", displayWords);
             songVerses.set((getAdapterPosition()), displayWordsIntoString);
             notifyItemChanged(getAdapterPosition());
+//            Log.d("original", originalSongVerses.toString());
         }
 
 
