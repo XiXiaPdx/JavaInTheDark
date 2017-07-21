@@ -34,6 +34,7 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
    private Context mContext;
     private CallMainLoadFragment callMainLoadFragment;
     private String savedOriginalVerse;
+    private int savedOriginalPosition;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
     //startLevel related
@@ -75,7 +76,9 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
 
     public void resetVerse(){
         if (gameOn) {
-            viewHolder.verseTextView.setText(savedOriginalVerse);
+            gameOn = false;
+            songVerses.set(savedOriginalPosition, savedOriginalVerse);
+            notifyItemChanged(savedOriginalPosition);
         }
     }
 
@@ -94,7 +97,8 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
 
         @Override
         public void onClick(View v) {
-            savedOriginalVerse = songVerses.get(getAdapterPosition());
+            savedOriginalPosition = getAdapterPosition();
+            savedOriginalVerse = songVerses.get(savedOriginalPosition);
             startLevel();
         }
 
