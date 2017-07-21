@@ -39,6 +39,7 @@ public class VersesList extends Fragment {
     LinearLayoutManager llm;
     List verseList;
     List finalModVerseList;
+    private VerseAdapter verseAdapter;
     // temporary
     private SharedPreferences.Editor editor;
     public VersesList() {
@@ -57,6 +58,7 @@ public class VersesList extends Fragment {
         displayArtistAndSongName();
         lyricsToVerseList();
         setVersesIntoRecyclerView();
+        setVersesScrollListener();
         //temp
         storeAllVerseLevels();
         return view;
@@ -101,7 +103,7 @@ public class VersesList extends Fragment {
     }
 
     public void setVersesIntoRecyclerView(){
-        VerseAdapter verseAdapter = new VerseAdapter(finalModVerseList, (MainActivity)getActivity(), versesRecycleView);
+        verseAdapter = new VerseAdapter(finalModVerseList, (MainActivity)getActivity(), versesRecycleView);
         versesRecycleView.setAdapter(verseAdapter);
         llm = new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL, false);
         versesRecycleView.setLayoutManager(llm);
@@ -127,25 +129,22 @@ public class VersesList extends Fragment {
 
     }
 
-//    public void setVersesScrollListener(){
-//        versesRecycleView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-//            @Override
-//            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-//                super.onScrollStateChanged(recyclerView, newState);
-//            }
-//
-//            @Override
-//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-//                super.onScrolled(recyclerView, dx, dy);
-//                VerseAdapter.VerseViewHolder view = versesRecycleView.findViewHolderForAdapterPosition(llm.findFirstVisibleItemPosition());
-//                view.ver
-//
-//                Log.d("movement", String.valueOf(dx) +"  " + String.valueOf() + "  " + String.valueOf(llm.findLastVisibleItemPosition()));
-//            }
-//        });
-//    }
+    public void setVersesScrollListener(){
+        versesRecycleView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
 
-//    public interface adapterResetOriginalVerse {
-//        void resetOriginalVerse(int firstPosition, int lastPosition);
-//    }
+                if (newState == 0) {
+                    verseAdapter.resetVerse();
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+//                VerseAdapter.VerseViewHolder view = versesRecycleView.findViewHolderForAdapterPosition(llm.findFirstVisibleItemPosition());
+            }
+        });
+    }
 }

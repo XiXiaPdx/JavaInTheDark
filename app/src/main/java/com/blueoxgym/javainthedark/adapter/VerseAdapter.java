@@ -72,6 +72,10 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
         return songVerses.size();
     }
 
+    public void resetVerse(){
+        Log.d("here", "here");
+    }
+
     public class VerseViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         @BindView(R.id.verseTextView)
         TextView verseTextView;
