@@ -36,6 +36,7 @@ public class VersesList extends Fragment {
     @BindView(R.id.songNameTextView) TextView songName;
     @BindView(R.id.artistTextView)TextView artistName;
     private SharedPreferences mSharedPreferences;
+    LinearLayoutManager llm;
     List verseList;
     List finalModVerseList;
     // temporary
@@ -100,9 +101,9 @@ public class VersesList extends Fragment {
     }
 
     public void setVersesIntoRecyclerView(){
-        VerseAdapter verseAdapter = new VerseAdapter(finalModVerseList, (MainActivity)getActivity());
+        VerseAdapter verseAdapter = new VerseAdapter(finalModVerseList, (MainActivity)getActivity(), versesRecycleView);
         versesRecycleView.setAdapter(verseAdapter);
-        LinearLayoutManager llm = new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL, false);
+        llm = new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL, false);
         versesRecycleView.setLayoutManager(llm);
         PagerSnapHelper helper = new PagerSnapHelper();
         helper.attachToRecyclerView(versesRecycleView);
@@ -121,4 +122,30 @@ public class VersesList extends Fragment {
             Log.d("In Shared Preferences  ", "Verse "+j+" Level "+level);
         }
     }
+
+    public void checkSpeech(String text){
+
+    }
+
+//    public void setVersesScrollListener(){
+//        versesRecycleView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+//                super.onScrollStateChanged(recyclerView, newState);
+//            }
+//
+//            @Override
+//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+//                super.onScrolled(recyclerView, dx, dy);
+//                VerseAdapter.VerseViewHolder view = versesRecycleView.findViewHolderForAdapterPosition(llm.findFirstVisibleItemPosition());
+//                view.ver
+//
+//                Log.d("movement", String.valueOf(dx) +"  " + String.valueOf() + "  " + String.valueOf(llm.findLastVisibleItemPosition()));
+//            }
+//        });
+//    }
+
+//    public interface adapterResetOriginalVerse {
+//        void resetOriginalVerse(int firstPosition, int lastPosition);
+//    }
 }

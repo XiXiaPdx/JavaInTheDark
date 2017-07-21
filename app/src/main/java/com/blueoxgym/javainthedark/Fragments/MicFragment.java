@@ -17,13 +17,11 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 
-import com.blueoxgym.javainthedark.MainActivity;
 import com.blueoxgym.javainthedark.MusicMatch.EachTrack;
 import com.blueoxgym.javainthedark.MusicMatch.LyricsModel;
 import com.blueoxgym.javainthedark.MusicMatch.MusicMatchClient;
 import com.blueoxgym.javainthedark.MusicMatch.ServiceGenerator;
 import com.blueoxgym.javainthedark.R;
-import com.blueoxgym.javainthedark.adapter.VerseAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +55,7 @@ public class MicFragment extends Fragment implements  View.OnClickListener {
     private String trackName;
     private String artistName;
     private CallMainLoadVerseFragment loadVerseFragment;
+    private CheckSpeech checkSpeechOnVerse;
 
 
     public MicFragment() {
@@ -76,6 +75,7 @@ public class MicFragment extends Fragment implements  View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_mic, container, false);
         ButterKnife.bind(this, view);
         this.loadVerseFragment = (CallMainLoadVerseFragment) getActivity();
+        this.checkSpeechOnVerse = (CheckSpeech) getActivity();
         btnMicrophone.setOnClickListener(this);
         fragmentManager = getFragmentManager();
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -140,6 +140,8 @@ public class MicFragment extends Fragment implements  View.OnClickListener {
             Fragment currentFragment = fragmentManager.findFragmentById(R.id.content_frame);
             if (currentFragment.toString().contains("LyricSearch")){
                 searchForSong(text);
+            } else if (currentFragment.toString().contains("VersesList")){
+                checkSpeechOnVerse.checkingSpeech(text);
             }
 
         }
@@ -185,7 +187,6 @@ public class MicFragment extends Fragment implements  View.OnClickListener {
             public void onNext(LyricsModel value) {
                 String lyrics = value.getMessage().getBody().getLyrics().getLyrics_body();
                 loadVerseFragment.loadVerseFragmentCall(lyrics);
-//                ((MainActivity)getActivity()).loadFragment(VersesList.newInstance(lyrics));
                 Log.e(TAG, "onNext: " +  value.getMessage().getBody().getLyrics().getLyrics_body()+ Thread.currentThread().getName());
             }
 
@@ -254,7 +255,11 @@ public class MicFragment extends Fragment implements  View.OnClickListener {
         Log.d("ERROR", "Sorry, we don't have lyrics for that song.");
     }
 
-    public static interface CallMainLoadVerseFragment {
+    public interface CallMainLoadVerseFragment {
         void loadVerseFragmentCall(String lyrics);
+    }
+
+    public interface CheckSpeech {
+        void checkingSpeech (String text);
     }
 }

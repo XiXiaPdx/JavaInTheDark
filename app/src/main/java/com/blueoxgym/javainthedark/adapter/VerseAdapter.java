@@ -8,13 +8,12 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.blueoxgym.javainthedark.Fragments.LevelTwo;
+import com.blueoxgym.javainthedark.Fragments.VersesList;
 import com.blueoxgym.javainthedark.MainActivity;
 import com.blueoxgym.javainthedark.R;
 
@@ -37,20 +36,26 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
     private String savedOriginalVerse;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
-    //startLeve related
+    //startLevel related
     private String lyric;
     private String verseNoPunc;
     private int currentLevel;
     private String[] referenceWords;
     private ArrayList displayWords;
     private ArrayList previousDisplayWords;
+    private RecyclerView versesRecycler;
+    VerseViewHolder viewHolder;
 
-
+    public VerseAdapter (List songVerses, MainActivity activity, RecyclerView versesRecycler){
+        this.songVerses = songVerses;
+        mContext = activity;
+        this.versesRecycler = versesRecycler;
+    }
 
     @Override
     public VerseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_verse, parent, false);
-        VerseViewHolder viewHolder = new VerseViewHolder(view);
+        viewHolder = new VerseViewHolder(view);
         this.callMainLoadFragment = (CallMainLoadFragment) mContext;
         sharedPreferences=PreferenceManager.getDefaultSharedPreferences(mContext);
         editor=sharedPreferences.edit();
@@ -67,7 +72,7 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
         return songVerses.size();
     }
 
-    public class VerseViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class VerseViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         @BindView(R.id.verseTextView)
         TextView verseTextView;
         @BindView(R.id.singleVerseCardView)
@@ -84,10 +89,9 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
         public void onClick(View v) {
             savedOriginalVerse = songVerses.get(getAdapterPosition());
             startLevel();
-//            String verse = songVerses.get(getAdapterPosition());
-//            callMainLoadFragment.loadFragmentCall(verse);
-
         }
+
+
         //**********
 //  below is about starting Level
 // **********
@@ -212,18 +216,12 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
                     displayWords.add(newDisplayWord);
                     break;
             }
-
         }
     }
 
     // END of VerseView Holder
 
-    public VerseAdapter (List songVerses, MainActivity activity){
-        this.songVerses = songVerses;
-        mContext = activity;
-    }
-
-    public static interface CallMainLoadFragment {
+    public  interface CallMainLoadFragment {
         void loadFragmentCall(String verse);
     }
 
