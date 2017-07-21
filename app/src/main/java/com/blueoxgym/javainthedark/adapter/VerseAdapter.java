@@ -44,6 +44,7 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
     private ArrayList displayWords;
     private ArrayList previousDisplayWords;
     private RecyclerView versesRecycler;
+    private Boolean gameOn = false;
     VerseViewHolder viewHolder;
 
     public VerseAdapter (List songVerses, MainActivity activity, RecyclerView versesRecycler){
@@ -73,7 +74,9 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
     }
 
     public void resetVerse(){
-        Log.d("here", "here");
+        if (gameOn) {
+            viewHolder.verseTextView.setText(savedOriginalVerse);
+        }
     }
 
     public class VerseViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -102,6 +105,7 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
 
         //TODO: refactor this into a whole separate file in the future.
         public void startLevel() {
+            gameOn=true;
             int position = getAdapterPosition();
             //what is the current Level of the verse?
             currentLevel = sharedPreferences.getInt(String.valueOf(position), -1);
