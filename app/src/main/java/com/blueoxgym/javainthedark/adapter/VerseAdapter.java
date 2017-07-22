@@ -101,20 +101,20 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
 
         @Override
         public void onClick(View v) {
-            savedOriginalPosition = getAdapterPosition();
-            startLevel();
-            // logic issue here with levels and saving original verse.
+            if (gameOn == false) {
+                savedOriginalPosition = getAdapterPosition();
+                startLevel(savedOriginalPosition);
+            } else {
+
+            }
         }
-
-
         //**********
 //  below is about starting Level
 // **********
 
-        //TODO: refactor this into a whole separate file in the future.
-        public void startLevel() {
+        public void startLevel(int adapterPostion) {
             gameOn=true;
-            int position = getAdapterPosition();
+            int position = adapterPostion;
             //what is the current Level of the verse?
             currentLevel = sharedPreferences.getInt(String.valueOf(position), -1);
             //make verse into a string and store in lyric
