@@ -31,7 +31,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, VerseAdapter.CallMainLoadFragment, MicFragment.CallMainLoadVerseFragment, MicFragment.CheckSpeech {
+        implements NavigationView.OnNavigationItemSelectedListener, MicFragment.CallMainLoadVerseFragment, MicFragment.CheckSpeech {
 
 
     public static final String TAG = "In Observer";
@@ -179,12 +179,6 @@ public void makeAuthListener() {
     }
 
     @Override
-    public void loadFragmentCall(String verse) {
-        LevelTwo levelTwo = new LevelTwo();
-        loadFragment(levelTwo.newInstance(verse));
-    }
-
-    @Override
     public void loadVerseFragmentCall(String lyrics) {
         VersesList versesList = new VersesList();
         loadFragment(versesList.newInstance(lyrics));
@@ -192,6 +186,6 @@ public void makeAuthListener() {
 
     @Override
     public void checkingSpeech(String text) {
-        // interface call fom Verses Lists...
+
     }
 }

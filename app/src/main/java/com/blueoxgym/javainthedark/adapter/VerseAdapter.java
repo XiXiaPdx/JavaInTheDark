@@ -33,7 +33,6 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
     private List<String> songVerses;
     private ArrayList<String> originalSongVerses = new ArrayList<String>();
    private Context mContext;
-    private CallMainLoadFragment callMainLoadFragment;
     private String savedOriginalVerse;
     private int savedOriginalPosition;
     private SharedPreferences sharedPreferences;
@@ -62,7 +61,6 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
     public VerseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_verse, parent, false);
         viewHolder = new VerseViewHolder(view);
-        this.callMainLoadFragment = (CallMainLoadFragment) mContext;
         sharedPreferences=PreferenceManager.getDefaultSharedPreferences(mContext);
         editor=sharedPreferences.edit();
         return viewHolder;
@@ -237,10 +235,5 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
     }
 
     // END of VerseView Holder
-
-    public  interface CallMainLoadFragment {
-        void loadFragmentCall(String verse);
-    }
-
 
 }
