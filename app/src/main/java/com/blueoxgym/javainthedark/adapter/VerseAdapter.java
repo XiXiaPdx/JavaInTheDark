@@ -34,8 +34,8 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
     private List<String> songVerses;
     private ArrayList<String> originalSongVerses = new ArrayList<String>();
    private Context mContext;
-    private String savedOriginalVerse;
-    private int savedOriginalPosition;
+    public String savedOriginalVerse;
+    public int savedOriginalPosition;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
     //startLevel related
@@ -88,9 +88,8 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
     public void checkForMatch(String speech) {
         if (speech.toLowerCase().equals(verseNoPunc)) {
             currentLevel++;
-            Log.d("New current", String.valueOf(currentLevel));
             editor.putInt(String.valueOf(savedOriginalPosition), currentLevel).apply();
-            Log.d("now level", String.valueOf(sharedPreferences.getInt(String.valueOf(savedOriginalPosition), -1)));
+            Log.d("New level now", String.valueOf(sharedPreferences.getInt(String.valueOf(savedOriginalPosition), -1)));
             viewHolder.startLevel();
         } else {
             checkEachWord(speech);
@@ -221,6 +220,7 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
             //create hint words based on level
             for (int i = 0; i < referenceWords.length; i++) {
                 String tempWord = referenceWords[i];
+                Log.d("Original Word", tempWord );
                 setHintWords(tempWord);
             }
             setLyricTextView();
@@ -229,7 +229,8 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
         public void setLyricTextView() {
             previousDisplayWords = displayWords;
             String displayWordsIntoString = TextUtils.join(" ", displayWords);
-            songVerses.set((getAdapterPosition()), displayWordsIntoString);
+            Log.d("adapter position set", String.valueOf(savedOriginalPosition));
+            songVerses.set(savedOriginalPosition, displayWordsIntoString);
             notifyItemChanged(getAdapterPosition());
         }
 
