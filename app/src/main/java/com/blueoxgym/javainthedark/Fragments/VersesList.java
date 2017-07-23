@@ -87,6 +87,7 @@ public class VersesList extends Fragment implements  View.OnClickListener {
 
     }
 
+
     public void lyricsToVerseList(){
         String lyrics = getArguments().getString("lyrics", "");
         verseList = new ArrayList<String>();
@@ -165,9 +166,6 @@ public class VersesList extends Fragment implements  View.OnClickListener {
 
     }
 
-    public void checkSpeech(String text){
-        verseAdapter.resetVerse();
-    }
 
     class listener implements RecognitionListener {
         @Override
@@ -215,7 +213,8 @@ public class VersesList extends Fragment implements  View.OnClickListener {
             Log.d(TAG, "onResults " + results);
             ArrayList<String> data = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
             String text = data.get(0).toLowerCase().replace("by","");
-                checkSpeech(text);
+            verseAdapter.checkForMatch(text);
+
         }
 
         @Override

@@ -19,6 +19,7 @@ import com.blueoxgym.javainthedark.R;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -84,6 +85,101 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
         }
     }
 
+    public void checkForMatch(String speech) {
+        if (speech.toLowerCase().equals(verseNoPunc)) {
+            currentLevel++;
+            Log.d("New current", String.valueOf(currentLevel));
+            editor.putInt(String.valueOf(savedOriginalPosition), currentLevel).apply();
+            Log.d("now level", String.valueOf(sharedPreferences.getInt(String.valueOf(savedOriginalPosition), -1)));
+            viewHolder.startLevel();
+        } else {
+            checkEachWord(speech);
+        }
+    }
+
+    public void checkEachWord(String speech) {
+        String[] speechWords = speech.split(" ");
+        //reset displayWord
+        displayWords = new ArrayList<String>();
+        //compare each word in speech array with reference array
+        for (int i = 0; i < referenceWords.length; i++) {
+            //speaker can say too few words. Check to prevent indexOutofBounds
+            if (i < speechWords.length) {
+                // need to remove punctuation from this word
+                String currentWordNoPunc = viewHolder.removeWordPunc(referenceWords[i]);
+                Log.d("CURRENT WORD", currentWordNoPunc);
+                String speechWord = speechWords[i].toLowerCase();
+                if (speechWord.equals(currentWordNoPunc)
+                        ) {
+                    //if word is match, pull original from reference WHICH HAS PUNC and add to display
+                    displayWords.add(referenceWords[i]);
+                } else {
+                    // word doesn't match, reveal more hints.
+                    revealMoreLetters(i);
+                }
+            } else {
+                //speech too short as compared to reference
+//                revealMoreLetters(i);
+                viewHolder.setHintWords(referenceWords[i]);
+            }
+        }
+        viewHolder.setLyricTextView();
+    }
+
+    public void revealMoreLetters(int i) {
+        // We know speech did not equal reference
+        // use previousDisplayWords to know where to begin inserting new letter
+        String previousWord = previousDisplayWords.get(i).toString();
+        if (viewHolder.alreadySolved(previousWord)) {
+            viewHolder.setHintWords(previousWord);
+            return;
+        }
+        StringBuilder tempWord = new StringBuilder(previousWord);
+        int dashCount = 0;
+        for (int k = 0; k < previousWord.length(); k++) {
+            if (String.valueOf(previousWord.charAt(k)).equals("-")) {
+                dashCount++;
+            }
+        }
+        switch (currentLevel) {
+            case 1:
+                if (dashCount > 1) {
+                    for (int j = 0; j < previousWord.length(); j++) {
+                        if (String.valueOf(previousWord.charAt(j)).equals("-")) {
+                            tempWord.setCharAt(j, referenceWords[i].charAt(j));
+                            displayWords.add(tempWord);
+                            break;
+                        }
+                    }
+                } else {
+                    displayWords.add(previousWord);
+                }
+                break;
+            case 2:
+            case 4:
+                displayWords.add(previousWord);
+                break;
+            case 3:
+                if (dashCount > 1) {
+                    Random ran = new Random();
+                    int randomIndex = 0;
+                    Character randomLetter;
+                    do {
+                        randomIndex = ran.nextInt(referenceWords[i].length());
+                        randomLetter = referenceWords[i].charAt(randomIndex);
+                    }
+                    while (randomIndex == 0 || viewHolder.ifEndInPunc(randomLetter) || viewHolder.isAtoZ(tempWord.charAt(randomIndex)));
+                    tempWord.setCharAt(randomIndex, randomLetter);
+                    displayWords.add(tempWord);
+                } else {
+                    displayWords.add(previousWord);
+                }
+                break;
+        }
+    }
+
+
+    // VerseViewHolder Class starts here
     public class VerseViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         @BindView(R.id.verseTextView)
         TextView verseTextView;
@@ -101,7 +197,8 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
         public void onClick(View v) {
             if (gameOn == false) {
                 savedOriginalPosition = getAdapterPosition();
-                startLevel(savedOriginalPosition);
+                gameOn=true;
+                startLevel();
             } else {
 
             }
@@ -110,13 +207,13 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
 //  below is about starting Level
 // **********
 
-        public void startLevel(int adapterPostion) {
-            gameOn=true;
-            int position = adapterPostion;
+        public void startLevel() {
+            int position = savedOriginalPosition;
             //what is the current Level of the verse?
             currentLevel = sharedPreferences.getInt(String.valueOf(position), -1);
+            Log.d("current level", String.valueOf(currentLevel));
             //make verse into a string and store in lyric
-            lyric = songVerses.get(position);
+            lyric = originalSongVerses.get(position);
             setVerseNoPunc(lyric);
             //split lyric string into array of strings
             displayWords = new ArrayList<String>();
@@ -134,7 +231,6 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
             String displayWordsIntoString = TextUtils.join(" ", displayWords);
             songVerses.set((getAdapterPosition()), displayWordsIntoString);
             notifyItemChanged(getAdapterPosition());
-//            Log.d("original", originalSongVerses.toString());
         }
 
 
@@ -199,7 +295,7 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
                             if (j == 0 && currentLevel == 1) {
                                 newDisplayWord = newDisplayWord + tempWord.charAt(j);
                             } else {
-                                // add "-"
+                                // level 3, no first letter, add "-"
                                 if (isAtoZ(tempWord.charAt(j))) {
                                     newDisplayWord = newDisplayWord + "-";
                                 } else {
@@ -212,7 +308,9 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
                     }
                     break;
                 case 2:
+                    //just the first letter only
                 case 4:
+                    //level 4, just a blank for each word
                     for (int j = 0; j < tempWord.length(); j++) {
                         // display first letter of word
                         if (j == 0) {
@@ -224,6 +322,7 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
                                     newDisplayWord = newDisplayWord + "-";
                                     break;
                             }
+                            //checking if there is punctuation at end of word
                         } else if (j == (tempWord.length() - 1) && ifEndInPunc(tempWord.charAt(j))) {
                             newDisplayWord = newDisplayWord + tempWord.charAt(j);
                         }
