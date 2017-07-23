@@ -21,6 +21,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.blueoxgym.javainthedark.Fragments.Instructions;
 import com.blueoxgym.javainthedark.Fragments.LevelTwo;
 import com.blueoxgym.javainthedark.Fragments.VersesList;
 import com.blueoxgym.javainthedark.Fragments.LogInFragment;
@@ -80,7 +81,7 @@ public FirebaseAuth firebaseAuth;
         exitFade.setDuration(200);
         fragment.setExitTransition(exitFade);
         FragmentManager fragmentManager = getSupportFragmentManager();
-        if(fragment.toString().contains("MicFragment")) {
+        if(fragment.toString().contains("MicFragment") || fragment.toString().contains("Instructions")) {
             fragmentManager.beginTransaction().replace(R.id.content2_frame, fragment).addToBackStack(null).commit();
         } else {
             fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack(null).commit();
@@ -181,7 +182,9 @@ public void makeAuthListener() {
     @Override
     public void loadVerseFragmentCall(String lyrics) {
         VersesList versesList = new VersesList();
+        Instructions instructions = new Instructions();
         loadFragment(versesList.newInstance(lyrics));
+        loadFragment(instructions.newInstance());
     }
 
     @Override

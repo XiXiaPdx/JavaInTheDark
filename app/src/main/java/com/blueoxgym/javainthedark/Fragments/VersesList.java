@@ -1,9 +1,13 @@
 package com.blueoxgym.javainthedark.Fragments;
 
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.speech.RecognitionListener;
+import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PagerSnapHelper;
@@ -12,6 +16,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.blueoxgym.javainthedark.MainActivity;
@@ -31,7 +37,14 @@ import static com.blueoxgym.javainthedark.Constants.SONG_NAME;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class VersesList extends Fragment {
+public class VersesList extends Fragment implements  View.OnClickListener {
+    @BindView(R.id.progressBarMic)
+    ProgressBar micLevels;
+    @BindView(R.id.btn_mic)
+    ImageButton btnMicrophone;
+    private SpeechRecognizer speech = null;
+    private Intent recognizerIntent;
+    public final static String TAG = "In speech mode";
     @BindView(R.id.versesRecycleView) RecyclerView versesRecycleView;
     @BindView(R.id.songNameTextView) TextView songName;
     @BindView(R.id.artistTextView)TextView artistName;
@@ -55,6 +68,7 @@ public class VersesList extends Fragment {
         ButterKnife.bind(this, view);
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         editor=mSharedPreferences.edit();
+        btnMicrophone.setOnClickListener(this);
         displayArtistAndSongName();
         lyricsToVerseList();
         setVersesIntoRecyclerView();
@@ -125,10 +139,6 @@ public class VersesList extends Fragment {
         }
     }
 
-    public void checkSpeech(String text){
-
-    }
-
     public void setVersesScrollListener(){
         versesRecycleView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -143,8 +153,92 @@ public class VersesList extends Fragment {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-//                VerseAdapter.VerseViewHolder view = versesRecycleView.findViewHolderForAdapterPosition(llm.findFirstVisibleItemPosition());
             }
         });
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v == btnMicrophone) {
+            startSpeechToText();
+        }
+
+    }
+
+    public void checkSpeech(String text){
+        verseAdapter.resetVerse();
+    }
+
+    class listener implements RecognitionListener {
+        @Override
+        public void onReadyForSpeech(Bundle params) {
+            Log.d(TAG, "onReadyForSpeech");
+        }
+
+        @Override
+        public void onBeginningOfSpeech() {
+            Log.d(TAG, "onBeginningOfSpeech");
+            micLevels.setMax(15);
+        }
+
+        @Override
+        public void onRmsChanged(float rmsdB) {
+            Log.d(TAG, String.valueOf(rmsdB));
+            micLevels.setProgress((int) rmsdB);
+        }
+
+        @Override
+        public void onBufferReceived(byte[] buffer) {
+            Log.d(TAG, "onBufferReceived");
+
+        }
+
+        @Override
+        public void onEndOfSpeech() {
+            Log.d(TAG, "onEndofSpeech");
+            micLevels.setProgress(6);
+            btnMicrophone.setBackgroundResource(R.drawable.circle_transparent);
+            speech.stopListening();
+        }
+
+        @Override
+        public void onError(int error) {
+            btnMicrophone.setBackgroundResource(R.drawable.circle_transparent);
+            speech.stopListening();
+            Log.d(TAG, "error " + error);
+        }
+
+
+        @Override
+        public void onResults(Bundle results) {
+            String str = new String();
+            Log.d(TAG, "onResults " + results);
+            ArrayList<String> data = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+            String text = data.get(0).toLowerCase().replace("by","");
+                checkSpeech(text);
+        }
+
+        @Override
+        public void onPartialResults(Bundle partialResults) {
+            Log.d(TAG, "onPartialResults");
+
+        }
+
+        @Override
+        public void onEvent(int eventType, Bundle what) {
+            Log.d(TAG, "onEvent " + eventType);
+        }
+
+    }
+    public void startSpeechToText(){
+        btnMicrophone.setBackgroundResource(R.drawable.circle_green);
+        speech=SpeechRecognizer.createSpeechRecognizer(getContext());
+        speech.setRecognitionListener(new listener());
+        recognizerIntent= new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, "en-US");
+        recognizerIntent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, getActivity().getPackageName());
+        recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        recognizerIntent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 5);
+        speech.startListening(recognizerIntent);
     }
 }

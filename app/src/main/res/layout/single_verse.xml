@@ -33,7 +33,7 @@
                 android:layout_gravity="center"
                 android:text="Verse Goes Here"
                 android:textColor="@color/colorPrimaryDark"
-                android:textSize="30sp"
+                android:textSize="24sp"
                 android:paddingBottom="20dp"
                 android:paddingRight="10dp"
                 app:layout_constraintTop_toTopOf="parent"
