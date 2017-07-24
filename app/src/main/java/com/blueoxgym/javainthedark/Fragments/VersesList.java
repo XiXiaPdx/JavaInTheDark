@@ -97,6 +97,7 @@ public class VersesList extends Fragment implements  View.OnClickListener {
         levelThreeStar = (ImageView) getView().findViewById(R.id.levelThreeStar);
         levelFourStar = (ImageView) getView().findViewById(R.id.levelFourStar);
         levelFiveStar = (ImageView) getView().findViewById(R.id.levelFiveStar);
+
     }
 
     public static VersesList newInstance(String lyrics){
