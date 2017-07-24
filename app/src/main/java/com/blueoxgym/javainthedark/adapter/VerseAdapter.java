@@ -200,16 +200,16 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
             case 1:
                 break;
             case 2:
-                versesList.levelOneStar.setImageResource(R.drawable.ic_star_black_18dp);
+                viewHolder.levelOneStar.setImageResource(R.drawable.ic_star_black_18dp);
                 break;
             case 3:
-                versesList.levelTwoStar.setImageResource(R.drawable.ic_star_black_18dp);
+                viewHolder.levelTwoStar.setImageResource(R.drawable.ic_star_black_18dp);
                 break;
             case 4:
-                versesList.levelThreeStar.setImageResource(R.drawable.ic_star_black_18dp);
+                viewHolder.levelThreeStar.setImageResource(R.drawable.ic_star_black_18dp);
                 break;
             case 5:
-                versesList.levelFourStar.setImageResource(R.drawable.ic_star_black_18dp);
+                viewHolder.levelFourStar.setImageResource(R.drawable.ic_star_black_18dp);
                 break;
         }
     }
@@ -221,6 +221,12 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
         TextView verseTextView;
         @BindView(R.id.singleVerseCardView)
         CardView singleVerseCard;
+        @BindView(R.id.levelOneStar) ImageView levelOneStar;
+        @BindView(R.id.levelTwoStar) ImageView levelTwoStar;
+        @BindView(R.id.levelThreeStar) ImageView levelThreeStar;
+        @BindView(R.id.levelFourStar) ImageView levelFourStar;
+        @BindView(R.id.levelFiveStar) ImageView levelFiveStar;
+
 
         public VerseViewHolder(View v) {
             super(v);

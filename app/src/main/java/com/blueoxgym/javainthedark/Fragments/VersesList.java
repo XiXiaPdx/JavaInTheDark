@@ -52,11 +52,6 @@ public class VersesList extends Fragment implements  View.OnClickListener {
     @BindView(R.id.versesRecycleView) RecyclerView versesRecycleView;
     @BindView(R.id.songNameTextView) TextView songName;
     @BindView(R.id.artistTextView)TextView artistName;
-    public static ImageView levelOneStar;
-    public static ImageView levelTwoStar;
-    public static ImageView levelThreeStar;
-    public static ImageView levelFourStar;
-    public static ImageView levelFiveStar;
     private SharedPreferences mSharedPreferences;
     LinearLayoutManager llm;
     List verseList;
@@ -89,16 +84,6 @@ public class VersesList extends Fragment implements  View.OnClickListener {
         return view;
     }
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        levelOneStar = (ImageView) getView().findViewById(R.id.levelOneStar);
-        levelTwoStar = (ImageView) getView().findViewById(R.id.levelTwoStar);
-        levelThreeStar = (ImageView) getView().findViewById(R.id.levelThreeStar);
-        levelFourStar = (ImageView) getView().findViewById(R.id.levelFourStar);
-        levelFiveStar = (ImageView) getView().findViewById(R.id.levelFiveStar);
-
-    }
 
     public static VersesList newInstance(String lyrics){
         VersesList versesListFragment = new VersesList();
