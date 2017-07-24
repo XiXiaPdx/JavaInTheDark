@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.blueoxgym.javainthedark.Fragments.VersesList;
@@ -88,8 +89,9 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
     public void checkForMatch(String speech) {
         if (speech.toLowerCase().equals(verseNoPunc)) {
             currentLevel++;
+            Log.d("Just after match", String.valueOf(currentLevel));
             editor.putInt(String.valueOf(savedOriginalPosition), currentLevel).apply();
-            Log.d("New level now", String.valueOf(sharedPreferences.getInt(String.valueOf(savedOriginalPosition), -1)));
+            Log.d("New level in PREF", String.valueOf(sharedPreferences.getInt(String.valueOf(savedOriginalPosition), -1)));
             viewHolder.startLevel();
         } else {
             checkEachWord(speech);
@@ -106,7 +108,7 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
             if (i < speechWords.length) {
                 // need to remove punctuation from this word
                 String currentWordNoPunc = viewHolder.removeWordPunc(referenceWords[i]);
-                Log.d("CURRENT WORD", currentWordNoPunc);
+                Log.d("CHECKING THIS WORD", currentWordNoPunc);
                 String speechWord = speechWords[i].toLowerCase();
                 if (speechWord.equals(currentWordNoPunc)
                         ) {
@@ -196,7 +198,7 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
         public void onClick(View v) {
             if (gameOn == false) {
                 savedOriginalPosition = getAdapterPosition();
-                gameOn=true;
+                setGameOnConditions();
                 startLevel();
             } else {
 
@@ -226,12 +228,18 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
             setLyricTextView();
         }
 
+        public void setGameOnConditions(){
+            gameOn = true;
+
+        }
+
         public void setLyricTextView() {
             previousDisplayWords = displayWords;
             String displayWordsIntoString = TextUtils.join(" ", displayWords);
+            Log.d("In Set", displayWordsIntoString );
             Log.d("adapter position set", String.valueOf(savedOriginalPosition));
             songVerses.set(savedOriginalPosition, displayWordsIntoString);
-            notifyItemChanged(getAdapterPosition());
+            notifyItemChanged(savedOriginalPosition);
         }
 
 
@@ -299,12 +307,14 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
                                 // level 3, no first letter, add "-"
                                 if (isAtoZ(tempWord.charAt(j))) {
                                     newDisplayWord = newDisplayWord + "-";
+                                    Log.d("Level 3", newDisplayWord);
                                 } else {
                                     // keep punctuation
                                     newDisplayWord = newDisplayWord + tempWord.charAt(j);
                                 }
                             }
                         }
+                        Log.d("Display before ADD", TextUtils.join(" ", displayWords));
                         displayWords.add(newDisplayWord);
                     }
                     break;
