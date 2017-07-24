@@ -1,13 +1,16 @@
 package com.blueoxgym.javainthedark.Fragments;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.Image;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PagerSnapHelper;
@@ -17,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -48,6 +52,11 @@ public class VersesList extends Fragment implements  View.OnClickListener {
     @BindView(R.id.versesRecycleView) RecyclerView versesRecycleView;
     @BindView(R.id.songNameTextView) TextView songName;
     @BindView(R.id.artistTextView)TextView artistName;
+    public static ImageView levelOneStar;
+    public static ImageView levelTwoStar;
+    public static ImageView levelThreeStar;
+    public static ImageView levelFourStar;
+    public static ImageView levelFiveStar;
     private SharedPreferences mSharedPreferences;
     LinearLayoutManager llm;
     List verseList;
@@ -58,6 +67,8 @@ public class VersesList extends Fragment implements  View.OnClickListener {
     public VersesList() {
         // Required empty public constructor
     }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -78,15 +89,23 @@ public class VersesList extends Fragment implements  View.OnClickListener {
         return view;
     }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        levelOneStar = (ImageView) getView().findViewById(R.id.levelOneStar);
+        levelTwoStar = (ImageView) getView().findViewById(R.id.levelTwoStar);
+        levelThreeStar = (ImageView) getView().findViewById(R.id.levelThreeStar);
+        levelFourStar = (ImageView) getView().findViewById(R.id.levelFourStar);
+        levelFiveStar = (ImageView) getView().findViewById(R.id.levelFiveStar);
+    }
+
     public static VersesList newInstance(String lyrics){
         VersesList versesListFragment = new VersesList();
         Bundle args = new Bundle();
         args.putString("lyrics", lyrics);
         versesListFragment.setArguments(args);
         return versesListFragment;
-
     }
-
 
     public void lyricsToVerseList(){
         String lyrics = getArguments().getString("lyrics", "");
@@ -105,7 +124,6 @@ public class VersesList extends Fragment implements  View.OnClickListener {
                    numberOfWords = addThisVerse.split(" ").length;
                }
                finalModVerseList.add(addThisVerse);
-//               finalModVerseList.add(verseList.get(i).toString());
            }
         }
     }
@@ -118,7 +136,7 @@ public class VersesList extends Fragment implements  View.OnClickListener {
     }
 
     public void setVersesIntoRecyclerView(){
-        verseAdapter = new VerseAdapter(finalModVerseList, (MainActivity)getActivity(), versesRecycleView);
+        verseAdapter = new VerseAdapter(finalModVerseList, this.getContext(), versesRecycleView, micLevels, btnMicrophone, VersesList.this);
         versesRecycleView.setAdapter(verseAdapter);
         llm = new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL, false);
         versesRecycleView.setLayoutManager(llm);
@@ -145,15 +163,15 @@ public class VersesList extends Fragment implements  View.OnClickListener {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-
-                if (newState == 0) {
-                    verseAdapter.resetVerse();
-                }
+//                if (newState == 0) {
+//                    verseAdapter.resetVerse();
+//                }
             }
 
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
+                verseAdapter.resetVerse();
             }
         });
     }
@@ -161,9 +179,8 @@ public class VersesList extends Fragment implements  View.OnClickListener {
     @Override
     public void onClick(View v) {
         if (v == btnMicrophone) {
-            startSpeechToText();
+         startSpeechToText();
         }
-
     }
 
 

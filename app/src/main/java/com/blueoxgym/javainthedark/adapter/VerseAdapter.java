@@ -8,14 +8,13 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import com.blueoxgym.javainthedark.Fragments.VersesList;
-import com.blueoxgym.javainthedark.MainActivity;
 import com.blueoxgym.javainthedark.R;
 
 import java.util.ArrayList;
@@ -42,21 +41,31 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
     //startLevel related
     private String lyric;
     private String verseNoPunc;
-    private int currentLevel;
+    public  int currentLevel;
     private String[] referenceWords;
     private ArrayList displayWords;
     private ArrayList previousDisplayWords;
     private RecyclerView versesRecycler;
-    private Boolean gameOn = false;
+    public Boolean gameOn;
+    public ImageButton btnMic;
+    public ProgressBar micLevels;
+    public VersesList versesList;
+    public View fragment;
+
     VerseViewHolder viewHolder;
 
-    public VerseAdapter (List<String> songVerses, MainActivity activity, RecyclerView versesRecycler){
+    public VerseAdapter (List<String> songVerses, Context activity, RecyclerView versesRecycler, ProgressBar micLevels, ImageButton btnMic, VersesList versesList){
         this.songVerses = songVerses;
         mContext = activity;
         this.versesRecycler = versesRecycler;
         for(int i=0; i < songVerses.size(); i++){
             originalSongVerses.add(i, songVerses.get(i));
         }
+        gameOn = false;
+        this.versesList = versesList;
+        this.btnMic = btnMic;
+        this.micLevels = micLevels;
+        setGameOffConditions();
     }
 
     @Override
@@ -79,18 +88,24 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
     }
 
     public void resetVerse(){
-        if (gameOn) {
-            gameOn = false;
+        if (gameOn == true) {
+            setGameOffConditions();
             songVerses.set(savedOriginalPosition, originalSongVerses.get(savedOriginalPosition));
             notifyItemChanged(savedOriginalPosition);
         }
     }
 
+    public void setGameOffConditions(){
+        gameOn=false;
+        btnMic.setVisibility(View.INVISIBLE);
+        micLevels.setVisibility(View.INVISIBLE);
+    }
+
     public void checkForMatch(String speech) {
         if (speech.toLowerCase().equals(verseNoPunc)) {
             currentLevel++;
-            Log.d("Just after match", String.valueOf(currentLevel));
             editor.putInt(String.valueOf(savedOriginalPosition), currentLevel).apply();
+            setStars();
             Log.d("New level in PREF", String.valueOf(sharedPreferences.getInt(String.valueOf(savedOriginalPosition), -1)));
             viewHolder.startLevel();
         } else {
@@ -179,6 +194,26 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
         }
     }
 
+    public void setStars(){
+        int current = sharedPreferences.getInt(String.valueOf(savedOriginalPosition), -1);
+        switch (current){
+            case 1:
+                break;
+            case 2:
+                versesList.levelOneStar.setImageResource(R.drawable.ic_star_black_18dp);
+                break;
+            case 3:
+                versesList.levelTwoStar.setImageResource(R.drawable.ic_star_black_18dp);
+                break;
+            case 4:
+                versesList.levelThreeStar.setImageResource(R.drawable.ic_star_black_18dp);
+                break;
+            case 5:
+                versesList.levelFourStar.setImageResource(R.drawable.ic_star_black_18dp);
+                break;
+        }
+    }
+
 
     // VerseViewHolder Class starts here
     public class VerseViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -191,7 +226,7 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
             super(v);
             ButterKnife.bind(this, v);
             singleVerseCard.setOnClickListener(this);
-            mContext = itemView.getContext();
+//            mContext = itemView.getContext();
         }
 
         @Override
@@ -200,10 +235,10 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
                 savedOriginalPosition = getAdapterPosition();
                 setGameOnConditions();
                 startLevel();
-            } else {
-
+                versesList.startSpeechToText();
             }
         }
+
         //**********
 //  below is about starting Level
 // **********
@@ -230,7 +265,8 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
 
         public void setGameOnConditions(){
             gameOn = true;
-
+            btnMic.setVisibility(View.VISIBLE);
+            micLevels.setVisibility(View.VISIBLE);
         }
 
         public void setLyricTextView() {
