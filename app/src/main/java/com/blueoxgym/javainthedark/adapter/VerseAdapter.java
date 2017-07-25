@@ -14,6 +14,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.blueoxgym.javainthedark.Fragments.VersesList;
 import com.blueoxgym.javainthedark.R;
 
@@ -106,6 +108,7 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
             editor.putInt(String.valueOf(savedOriginalPosition), currentLevel).apply();
             Log.d("After Check Set Star", songVerses.get(savedOriginalPosition));
             setStars(savedOriginalPosition);
+            //could crash right here..update stars and scrolling.
             if (currentLevel <5 ) {
                 viewHolder.startLevel();
             } else {
@@ -244,11 +247,13 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
 
         @Override
         public void onClick(View v) {
-            if (gameOn == false) {
+            if (gameOn == false && sharedPreferences.getInt(String.valueOf(getAdapterPosition()), -1) < 5) {
                 savedOriginalPosition = getAdapterPosition();
                 setGameOnConditions();
                 startLevel();
                 versesList.startSpeechToText();
+            } else {
+                Toast.makeText(mContext, "The last Star is a secret. Keep playing!", Toast.LENGTH_LONG).show();
             }
         }
 

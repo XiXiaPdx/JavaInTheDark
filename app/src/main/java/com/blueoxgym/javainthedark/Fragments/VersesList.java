@@ -178,7 +178,6 @@ public class VersesList extends Fragment implements  View.OnClickListener {
 
     public void scrollToNext(){
         RecyclerView.State state = new RecyclerView.State();
-
         llm.smoothScrollToPosition(versesRecycleView, state  ,currentVisible+1);
     }
 
@@ -238,6 +237,7 @@ public class VersesList extends Fragment implements  View.OnClickListener {
 
         @Override
         public void onResults(Bundle results) {
+            isMicOn = false;
             String str = new String();
             Log.d(TAG, "onResults " + results);
             ArrayList<String> data = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);

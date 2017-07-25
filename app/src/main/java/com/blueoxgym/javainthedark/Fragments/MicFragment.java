@@ -148,6 +148,7 @@ public class MicFragment extends Fragment implements  View.OnClickListener {
 
         @Override
         public void onResults(Bundle results) {
+            isMicOn = false;
             String str = new String();
             Log.d(TAG, "onResults " + results);
             ArrayList<String> data = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);

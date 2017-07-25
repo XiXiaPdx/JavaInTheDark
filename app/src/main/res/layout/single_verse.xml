@@ -31,19 +31,20 @@
                 android:layout_width="294dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="Verse Goes Here"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="24sp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="0dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
                 android:paddingBottom="20dp"
                 android:paddingRight="10dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginRight="0dp"
-                app:layout_constraintRight_toRightOf="parent"
-                android:layout_marginLeft="8dp"
-                app:layout_constraintLeft_toLeftOf="parent"
+                android:text="Verse Goes Here"
+                android:textAlignment="center"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="24sp"
                 app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginTop="8dp" />
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </android.support.constraint.ConstraintLayout>
     </android.support.v7.widget.CardView>
