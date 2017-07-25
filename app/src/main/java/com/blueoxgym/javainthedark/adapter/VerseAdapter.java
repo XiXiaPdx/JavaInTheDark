@@ -106,7 +106,11 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
             editor.putInt(String.valueOf(savedOriginalPosition), currentLevel).apply();
             Log.d("After Check Set Star", songVerses.get(savedOriginalPosition));
             setStars(savedOriginalPosition);
-            viewHolder.startLevel();
+            if (currentLevel <5 ) {
+                viewHolder.startLevel();
+            } else {
+                versesList.scrollToNext();
+            }
         } else {
             checkEachWord(speech);
         }

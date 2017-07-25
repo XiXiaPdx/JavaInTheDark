@@ -62,6 +62,7 @@ public class VersesList extends Fragment implements  View.OnClickListener {
     private SharedPreferences.Editor editor;
     private ProgressDialog speechLoading;
     private Boolean isMicOn;
+    private int currentVisible;
 
     public VersesList() {
         // Required empty public constructor
@@ -162,7 +163,7 @@ public class VersesList extends Fragment implements  View.OnClickListener {
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 if (newState == 0) {
-                    int currentVisible = llm.findLastCompletelyVisibleItemPosition();
+                    currentVisible = llm.findLastCompletelyVisibleItemPosition();
                     verseAdapter.setStars(currentVisible);
                 }
             }
@@ -173,6 +174,12 @@ public class VersesList extends Fragment implements  View.OnClickListener {
                 verseAdapter.resetVerse();
             }
         });
+    }
+
+    public void scrollToNext(){
+        RecyclerView.State state = new RecyclerView.State();
+
+        llm.smoothScrollToPosition(versesRecycleView, state  ,currentVisible+1);
     }
 
     @Override
