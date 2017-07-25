@@ -1,6 +1,7 @@
 package com.blueoxgym.javainthedark.Fragments;
 
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -59,11 +60,12 @@ public class VersesList extends Fragment implements  View.OnClickListener {
     private VerseAdapter verseAdapter;
     // temporary
     private SharedPreferences.Editor editor;
+    private ProgressDialog speechLoading;
+    private Boolean isMicOn;
+
     public VersesList() {
         // Required empty public constructor
     }
-
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -81,6 +83,10 @@ public class VersesList extends Fragment implements  View.OnClickListener {
         setVersesScrollListener();
         //temp
         storeAllVerseLevels();
+        speechLoadingDialog();
+        isMicOn = false;
+
+
         return view;
     }
 
@@ -91,6 +97,12 @@ public class VersesList extends Fragment implements  View.OnClickListener {
         args.putString("lyrics", lyrics);
         versesListFragment.setArguments(args);
         return versesListFragment;
+    }
+
+    public void speechLoadingDialog(){
+        speechLoading = new ProgressDialog(getContext());
+        speechLoading.setTitle(getString(R.string.speech_loading));
+        speechLoading.setCancelable(false);
     }
 
     public void lyricsToVerseList(){
@@ -144,14 +156,15 @@ public class VersesList extends Fragment implements  View.OnClickListener {
         }
     }
 
-    public void setVersesScrollListener(){
+    public void setVersesScrollListener() {
         versesRecycleView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-//                if (newState == 0) {
-//                    verseAdapter.resetVerse();
-//                }
+                if (newState == 0) {
+                    int currentVisible = llm.findLastCompletelyVisibleItemPosition();
+                    verseAdapter.setStars(currentVisible);
+                }
             }
 
             @Override
@@ -165,7 +178,12 @@ public class VersesList extends Fragment implements  View.OnClickListener {
     @Override
     public void onClick(View v) {
         if (v == btnMicrophone) {
-         startSpeechToText();
+            if(!isMicOn){
+            startSpeechToText();
+        } else {
+                speech.stopListening();
+                isMicOn = false;
+            }
         }
     }
 
@@ -174,6 +192,7 @@ public class VersesList extends Fragment implements  View.OnClickListener {
         @Override
         public void onReadyForSpeech(Bundle params) {
             Log.d(TAG, "onReadyForSpeech");
+            speechLoading.dismiss();
         }
 
         @Override
@@ -199,14 +218,14 @@ public class VersesList extends Fragment implements  View.OnClickListener {
             Log.d(TAG, "onEndofSpeech");
             micLevels.setProgress(6);
             btnMicrophone.setBackgroundResource(R.drawable.circle_transparent);
-            speech.stopListening();
         }
 
         @Override
         public void onError(int error) {
+            speechLoading.dismiss();
             btnMicrophone.setBackgroundResource(R.drawable.circle_transparent);
-            speech.stopListening();
             Log.d(TAG, "error " + error);
+            speech.destroy();
         }
 
 
@@ -217,12 +236,14 @@ public class VersesList extends Fragment implements  View.OnClickListener {
             ArrayList<String> data = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
             String text = data.get(0).toLowerCase().replace("by","");
             verseAdapter.checkForMatch(text);
+            speech.destroy();
 
         }
 
         @Override
         public void onPartialResults(Bundle partialResults) {
             Log.d(TAG, "onPartialResults");
+            speech.destroy();
 
         }
 
@@ -233,6 +254,8 @@ public class VersesList extends Fragment implements  View.OnClickListener {
 
     }
     public void startSpeechToText(){
+        speechLoading.show();
+        isMicOn = true;
         btnMicrophone.setBackgroundResource(R.drawable.circle_green);
         speech=SpeechRecognizer.createSpeechRecognizer(getContext());
         speech.setRecognitionListener(new listener());

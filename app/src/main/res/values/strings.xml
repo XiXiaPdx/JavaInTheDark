@@ -6,8 +6,10 @@
 
     <string name="action_settings">Settings</string>
     <string name="action_fun">Fun</string>
+    <string name="speech_loading">Warming Up The Mic...</string>
+
     <string name="example_instructions">Tap Mic and say Song Name and Artist.\n\nExample:
-        \n"Hey Jude Beatles"</string>
+        \n"Million Reasons Lady Gaga"</string>
     <string name="game_instructions">Read lyrics once. Then, tap lyrics to start Level 1! </string>
 
 

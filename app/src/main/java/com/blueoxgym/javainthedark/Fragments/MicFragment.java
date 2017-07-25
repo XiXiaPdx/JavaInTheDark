@@ -1,6 +1,7 @@
 package com.blueoxgym.javainthedark.Fragments;
 
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -56,6 +57,8 @@ public class MicFragment extends Fragment implements  View.OnClickListener {
     private String artistName;
     private CallMainLoadVerseFragment loadVerseFragment;
     private CheckSpeech checkSpeechOnVerse;
+    private ProgressDialog speechLoading;
+    private Boolean isMicOn;
 
 
     public MicFragment() {
@@ -80,21 +83,34 @@ public class MicFragment extends Fragment implements  View.OnClickListener {
         fragmentManager = getFragmentManager();
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         mEditor = mSharedPreferences.edit();
+        speechLoadingDialog();
+        isMicOn = false;
         return view;
     }
 
     @Override
     public void onClick(View v) {
         if (v == btnMicrophone) {
-            startSpeechToText();
+            if(!isMicOn){
+                startSpeechToText();
+            } else {
+                speech.stopListening();
+                isMicOn = false;
+            }
         }
+    }
 
+    public void speechLoadingDialog(){
+        speechLoading = new ProgressDialog(getContext());
+        speechLoading.setTitle(getString(R.string.speech_loading));
+        speechLoading.setCancelable(false);
     }
 
     class listener implements RecognitionListener {
         @Override
         public void onReadyForSpeech(Bundle params) {
             Log.d(TAG, "onReadyForSpeech");
+            speechLoading.dismiss();
         }
 
         @Override
@@ -112,7 +128,6 @@ public class MicFragment extends Fragment implements  View.OnClickListener {
         @Override
         public void onBufferReceived(byte[] buffer) {
             Log.d(TAG, "onBufferReceived");
-
         }
 
         @Override
@@ -120,13 +135,13 @@ public class MicFragment extends Fragment implements  View.OnClickListener {
             Log.d(TAG, "onEndofSpeech");
             micLevels.setProgress(6);
             btnMicrophone.setBackgroundResource(R.drawable.circle_transparent);
-            speech.stopListening();
         }
 
         @Override
         public void onError(int error) {
+            speechLoading.dismiss();
             btnMicrophone.setBackgroundResource(R.drawable.circle_transparent);
-            speech.stopListening();
+            speech.destroy();
             Log.d(TAG, "error " + error);
         }
 
@@ -143,12 +158,14 @@ public class MicFragment extends Fragment implements  View.OnClickListener {
             } else if (currentFragment.toString().contains("VersesList")){
                 checkSpeechOnVerse.checkingSpeech(text);
             }
+            speech.destroy();
 
         }
 
         @Override
         public void onPartialResults(Bundle partialResults) {
             Log.d(TAG, "onPartialResults");
+            speech.destroy();
 
         }
 
@@ -159,6 +176,8 @@ public class MicFragment extends Fragment implements  View.OnClickListener {
 
     }
     public void startSpeechToText(){
+        isMicOn = true;
+        speechLoading.show();
         btnMicrophone.setBackgroundResource(R.drawable.circle_green);
         speech=SpeechRecognizer.createSpeechRecognizer(getContext());
         speech.setRecognitionListener(new listener());
@@ -167,6 +186,7 @@ public class MicFragment extends Fragment implements  View.OnClickListener {
         recognizerIntent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, getActivity().getPackageName());
         recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         recognizerIntent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 5);
+        recognizerIntent.putExtra(RecognizerIntent.EXTRA_PROMPT, "HEY HEY");
         speech.startListening(recognizerIntent);
     }
 

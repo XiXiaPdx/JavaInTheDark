@@ -51,8 +51,7 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
     public ProgressBar micLevels;
     public VersesList versesList;
     public View fragment;
-
-    VerseViewHolder viewHolder;
+    public VerseViewHolder viewHolder;
 
     public VerseAdapter (List<String> songVerses, Context activity, RecyclerView versesRecycler, ProgressBar micLevels, ImageButton btnMic, VersesList versesList){
         this.songVerses = songVerses;
@@ -105,8 +104,8 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
         if (speech.toLowerCase().equals(verseNoPunc)) {
             currentLevel++;
             editor.putInt(String.valueOf(savedOriginalPosition), currentLevel).apply();
-            setStars();
-            Log.d("New level in PREF", String.valueOf(sharedPreferences.getInt(String.valueOf(savedOriginalPosition), -1)));
+            Log.d("After Check Set Star", songVerses.get(savedOriginalPosition));
+            setStars(savedOriginalPosition);
             viewHolder.startLevel();
         } else {
             checkEachWord(speech);
@@ -194,25 +193,29 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
         }
     }
 
-    public void setStars(){
-        int current = sharedPreferences.getInt(String.valueOf(savedOriginalPosition), -1);
-        switch (current){
-            case 1:
-                break;
-            case 2:
-                viewHolder.levelOneStar.setImageResource(R.drawable.ic_star_black_18dp);
-                break;
-            case 3:
-                viewHolder.levelTwoStar.setImageResource(R.drawable.ic_star_black_18dp);
-                break;
-            case 4:
-                viewHolder.levelThreeStar.setImageResource(R.drawable.ic_star_black_18dp);
-                break;
-            case 5:
+    public void setStars(int position){
+        clearStars();
+        int current = sharedPreferences.getInt(String.valueOf(position), -1);
+        Log.d("Setting Star for", songVerses.get(position) + " and at level " + String.valueOf(current));
+        if (current >= 2) {
+            viewHolder.levelOneStar.setImageResource(R.drawable.ic_star_black_18dp);
+        } if (current >= 3){
+            viewHolder.levelTwoStar.setImageResource(R.drawable.ic_star_black_18dp);
+        } if (current >= 4) {
+            viewHolder.levelThreeStar.setImageResource(R.drawable.ic_star_black_18dp);
+        } if (current >= 5){
                 viewHolder.levelFourStar.setImageResource(R.drawable.ic_star_black_18dp);
-                break;
         }
     }
+
+
+    public void clearStars(){
+        viewHolder.levelOneStar.setImageResource(R.drawable.ic_star_border_white_18dp);
+        viewHolder.levelTwoStar.setImageResource(R.drawable.ic_star_border_white_18dp);
+        viewHolder.levelThreeStar.setImageResource(R.drawable.ic_star_border_white_18dp);
+        viewHolder.levelFourStar.setImageResource(R.drawable.ic_star_border_white_18dp);
+    }
+
 
 
     // VerseViewHolder Class starts here
@@ -385,7 +388,5 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
             }
         }
     }
-
     // END of VerseView Holder
-
 }
