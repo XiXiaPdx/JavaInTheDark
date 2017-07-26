@@ -1,6 +1,7 @@
 package com.blueoxgym.javainthedark.Fragments;
 
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -17,13 +18,11 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 
-import com.blueoxgym.javainthedark.MainActivity;
 import com.blueoxgym.javainthedark.MusicMatch.EachTrack;
 import com.blueoxgym.javainthedark.MusicMatch.LyricsModel;
 import com.blueoxgym.javainthedark.MusicMatch.MusicMatchClient;
 import com.blueoxgym.javainthedark.MusicMatch.ServiceGenerator;
 import com.blueoxgym.javainthedark.R;
-import com.blueoxgym.javainthedark.adapter.VerseAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +56,9 @@ public class MicFragment extends Fragment implements  View.OnClickListener {
     private String trackName;
     private String artistName;
     private CallMainLoadVerseFragment loadVerseFragment;
+    private CheckSpeech checkSpeechOnVerse;
+    private ProgressDialog speechLoading;
+    private Boolean isMicOn;
 
 
     public MicFragment() {
@@ -76,25 +78,39 @@ public class MicFragment extends Fragment implements  View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_mic, container, false);
         ButterKnife.bind(this, view);
         this.loadVerseFragment = (CallMainLoadVerseFragment) getActivity();
+        this.checkSpeechOnVerse = (CheckSpeech) getActivity();
         btnMicrophone.setOnClickListener(this);
         fragmentManager = getFragmentManager();
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         mEditor = mSharedPreferences.edit();
+        speechLoadingDialog();
+        isMicOn = false;
         return view;
     }
 
     @Override
     public void onClick(View v) {
         if (v == btnMicrophone) {
-            startSpeechToText();
+            if(!isMicOn){
+                startSpeechToText();
+            } else {
+                speech.stopListening();
+                isMicOn = false;
+            }
         }
+    }
 
+    public void speechLoadingDialog(){
+        speechLoading = new ProgressDialog(getContext());
+        speechLoading.setTitle(getString(R.string.speech_loading));
+        speechLoading.setCancelable(false);
     }
 
     class listener implements RecognitionListener {
         @Override
         public void onReadyForSpeech(Bundle params) {
             Log.d(TAG, "onReadyForSpeech");
+            speechLoading.dismiss();
         }
 
         @Override
@@ -112,7 +128,6 @@ public class MicFragment extends Fragment implements  View.OnClickListener {
         @Override
         public void onBufferReceived(byte[] buffer) {
             Log.d(TAG, "onBufferReceived");
-
         }
 
         @Override
@@ -120,19 +135,20 @@ public class MicFragment extends Fragment implements  View.OnClickListener {
             Log.d(TAG, "onEndofSpeech");
             micLevels.setProgress(6);
             btnMicrophone.setBackgroundResource(R.drawable.circle_transparent);
-            speech.stopListening();
         }
 
         @Override
         public void onError(int error) {
+            speechLoading.dismiss();
             btnMicrophone.setBackgroundResource(R.drawable.circle_transparent);
-            speech.stopListening();
+            speech.destroy();
             Log.d(TAG, "error " + error);
         }
 
 
         @Override
         public void onResults(Bundle results) {
+            isMicOn = false;
             String str = new String();
             Log.d(TAG, "onResults " + results);
             ArrayList<String> data = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
@@ -140,13 +156,17 @@ public class MicFragment extends Fragment implements  View.OnClickListener {
             Fragment currentFragment = fragmentManager.findFragmentById(R.id.content_frame);
             if (currentFragment.toString().contains("LyricSearch")){
                 searchForSong(text);
+            } else if (currentFragment.toString().contains("VersesList")){
+                checkSpeechOnVerse.checkingSpeech(text);
             }
+            speech.destroy();
 
         }
 
         @Override
         public void onPartialResults(Bundle partialResults) {
             Log.d(TAG, "onPartialResults");
+            speech.destroy();
 
         }
 
@@ -157,6 +177,8 @@ public class MicFragment extends Fragment implements  View.OnClickListener {
 
     }
     public void startSpeechToText(){
+        isMicOn = true;
+        speechLoading.show();
         btnMicrophone.setBackgroundResource(R.drawable.circle_green);
         speech=SpeechRecognizer.createSpeechRecognizer(getContext());
         speech.setRecognitionListener(new listener());
@@ -165,6 +187,7 @@ public class MicFragment extends Fragment implements  View.OnClickListener {
         recognizerIntent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, getActivity().getPackageName());
         recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         recognizerIntent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 5);
+        recognizerIntent.putExtra(RecognizerIntent.EXTRA_PROMPT, "HEY HEY");
         speech.startListening(recognizerIntent);
     }
 
@@ -185,7 +208,6 @@ public class MicFragment extends Fragment implements  View.OnClickListener {
             public void onNext(LyricsModel value) {
                 String lyrics = value.getMessage().getBody().getLyrics().getLyrics_body();
                 loadVerseFragment.loadVerseFragmentCall(lyrics);
-//                ((MainActivity)getActivity()).loadFragment(VersesList.newInstance(lyrics));
                 Log.e(TAG, "onNext: " +  value.getMessage().getBody().getLyrics().getLyrics_body()+ Thread.currentThread().getName());
             }
 
@@ -254,7 +276,11 @@ public class MicFragment extends Fragment implements  View.OnClickListener {
         Log.d("ERROR", "Sorry, we don't have lyrics for that song.");
     }
 
-    public static interface CallMainLoadVerseFragment {
+    public interface CallMainLoadVerseFragment {
         void loadVerseFragmentCall(String lyrics);
+    }
+
+    public interface CheckSpeech {
+        void checkingSpeech (String text);
     }
 }

@@ -101,11 +101,7 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
     }
 
     public void checkForMatch(String speech) {
-        if (currentLevel == 1) {
-            txtOutput.setText("Please try again..." + speech);
-        } else {
             checkEachWord(speech);
-        }
     }
 
     public Boolean isInstaMatch(String speech) {
@@ -163,7 +159,7 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
             }
         }
         switch (currentLevel) {
-            case 2:
+            case 1:
                 if (dashCount > 1) {
                     for (int j = 0; j < previousWord.length(); j++) {
                         if (String.valueOf(previousWord.charAt(j)).equals("-")) {
@@ -176,11 +172,11 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
                     displayWords.add(previousWord);
                 }
                 break;
-            case 3:
-            case 5:
+            case 2:
+            case 4:
                 displayWords.add(previousWord);
                 break;
-            case 4:
+            case 3:
                 if (dashCount > 1) {
                     Random ran = new Random();
                     int randomIndex = 0;
@@ -202,22 +198,12 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
 
     public void startLevel() {
         displayWords = new ArrayList<String>();
-        levelText.setText("LEVEL " + currentLevel);
         //make Display array of lyric words
         referenceWords = lyric.split(" ");
-        switch (currentLevel) {
-            case 1:
-                displayWords = new ArrayList<String>(Arrays.asList(referenceWords));
-                break;
-            case 2:
-            case 3:
-            case 4:
-            case 5:
-                for (int i = 0; i < referenceWords.length; i++) {
-                    String tempWord = referenceWords[i];
-                    setHintWords(tempWord);
-                }
-        }
+            for (int i = 0; i < referenceWords.length; i++) {
+                String tempWord = referenceWords[i];
+                setHintWords(tempWord);
+            }
         setLyricTextView();
     }
 
@@ -226,15 +212,15 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
         String tempWord = removeWordPunc(word);
         String newDisplayWord = "";
         switch (currentLevel) {
-            case 2:
-            case 4:
+            case 1:
+            case 3:
                 if (isOneLetterWord(tempWord)) {
                     break;
                 } else {
                     //loop over it and create new word character by character
                     for (int j = 0; j < tempWord.length(); j++) {
                         // display first letter of word
-                        if (j == 0 && currentLevel == 2) {
+                        if (j == 0 && currentLevel == 1) {
                             newDisplayWord = newDisplayWord + tempWord.charAt(j);
                         } else {
                             // add "-"
@@ -249,16 +235,16 @@ public class LevelTwo extends Fragment implements View.OnClickListener {
                     displayWords.add(newDisplayWord);
                 }
                 break;
-            case 3:
-            case 5:
+            case 2:
+            case 4:
                 for (int j = 0; j < tempWord.length(); j++) {
                     // display first letter of word
                     if (j == 0) {
                         switch (currentLevel) {
-                            case 3:
+                            case 2:
                                 newDisplayWord = newDisplayWord + tempWord.charAt(j);
                                 break;
-                            case 5:
+                            case 4:
                                 newDisplayWord = newDisplayWord + "-";
                                 break;
                         }
