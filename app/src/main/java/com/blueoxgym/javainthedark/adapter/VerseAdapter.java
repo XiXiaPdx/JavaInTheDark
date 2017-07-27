@@ -247,12 +247,13 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
 
         @Override
         public void onClick(View v) {
-            if (gameOn == false && sharedPreferences.getInt(String.valueOf(getAdapterPosition()), -1) < 5) {
+            int levelCheck = sharedPreferences.getInt(String.valueOf(getAdapterPosition()), -1);
+            if (gameOn == false && levelCheck < 5) {
                 savedOriginalPosition = getAdapterPosition();
                 setGameOnConditions();
                 startLevel();
                 versesList.startSpeechToText();
-            } else {
+            } else if (levelCheck > 4) {
                 Toast.makeText(mContext, "The last Star is a secret. Keep playing!", Toast.LENGTH_LONG).show();
             }
         }
