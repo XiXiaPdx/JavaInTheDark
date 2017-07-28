@@ -128,12 +128,12 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
             //speaker can say too few words. Check to prevent indexOutofBounds
             if (i < speechWords.length) {
                 // need to remove punctuation from this word
-                String currentWordNoPunc = viewHolder.removeWordPunc(referenceWords[i]);
+                String currentWordNoPunc = viewHolder.removeAllPunc(referenceWords[i]);
                 Log.d("VERSE WORD", currentWordNoPunc);
-                String speechWord = speechWords[i].toLowerCase();
-                Log.d("Speech WORD", speechWord);
+                String speechWordNoPunc = viewHolder.removeAllPunc(speechWords[i].toLowerCase());
+                Log.d("Speech WORD", speechWordNoPunc);
 
-                if (speechWord.equals(currentWordNoPunc)
+                if (speechWordNoPunc.equals(currentWordNoPunc)
                         ) {
                     //if word is match, pull original from reference WHICH HAS PUNC and add to display
                     displayWords.add(referenceWords[i]);
@@ -160,14 +160,7 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
             return;
         }
         StringBuilder tempWord = new StringBuilder(previousWord);
-//        int dashCount = 0;
-//        for (int k = 0; k < previousWord.length(); k++) {
-//            if (String.valueOf(previousWord.charAt(k)).equals("-")) {
-//                dashCount++;
-//            }
-//        }
         Boolean dashCount = previousWord.contains("-");
-
         Log.d("current level", String.valueOf(currentLevel));
         switch (currentLevel) {
             case 1:
@@ -337,8 +330,12 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
             verseNoPunc = TextUtils.join(" ", words);
         }
 
-        public String removeWordPunc(String word) {
+        public String removeEndPunc(String word) {
             return word.replaceAll("[^a-zA-Z' ]", "").toLowerCase();
+        }
+
+        public String removeAllPunc(String word) {
+            return word.replaceAll("[^a-zA-Z ]", "").toLowerCase();
         }
 
         public Boolean ifNotLetter(Character letter) {
@@ -351,14 +348,14 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
         }
 
         public void setHintWords(String word) {
-            //by removing ' at beginning now off by one in revealing.
-
-            String tempWord = removeWordPunc(word);
+            String tempWord = removeEndPunc(word);
             String newDisplayWord = "";
             try {
                 if (!Character.isLetterOrDigit(word.charAt(0))) {
                     newDisplayWord = newDisplayWord + String.valueOf(word.charAt(0));
                 }
+                Character.isLetterOrDigit(word.charAt(0));
+
             } catch (StringIndexOutOfBoundsException e)
             {
                 Log.e("SET HINT WORDS", "Empty word in this verse!");
