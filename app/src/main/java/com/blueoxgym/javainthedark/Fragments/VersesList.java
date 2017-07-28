@@ -108,6 +108,7 @@ public class VersesList extends Fragment implements  View.OnClickListener {
 
     public void lyricsToVerseList(){
         String lyrics = getArguments().getString("lyrics", "");
+        lyrics = lyrics.replace("\n\n", "\n");
         verseList = new ArrayList<String>();
         finalModVerseList = new ArrayList<String>();
         verseList= Arrays.asList(lyrics.split("\n"));
@@ -122,9 +123,13 @@ public class VersesList extends Fragment implements  View.OnClickListener {
                    addThisVerse += " " + verseList.get(i).toString();
                    numberOfWords = addThisVerse.split(" ").length;
                }
-               finalModVerseList.add(addThisVerse);
+               finalModVerseList.add(scrubbed(addThisVerse));
            }
         }
+    }
+
+    public String scrubbed (String verseToScrub){
+        return verseToScrub;
     }
 
     public void displayArtistAndSongName(){
@@ -241,7 +246,7 @@ public class VersesList extends Fragment implements  View.OnClickListener {
             String str = new String();
             Log.d(TAG, "onResults " + results);
             ArrayList<String> data = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-            String text = data.get(0).toLowerCase().replace("by","");
+            String text = data.get(0).toLowerCase();
             verseAdapter.checkForMatch(text);
             speech.destroy();
 

@@ -17,7 +17,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
+import com.blueoxgym.javainthedark.MainActivity;
 import com.blueoxgym.javainthedark.MusicMatch.EachTrack;
 import com.blueoxgym.javainthedark.MusicMatch.LyricsModel;
 import com.blueoxgym.javainthedark.MusicMatch.MusicMatchClient;
@@ -273,7 +275,7 @@ public class MicFragment extends Fragment implements  View.OnClickListener {
     }
 
     public void searchError() {
-        Log.d("ERROR", "Sorry, we don't have lyrics for that song.");
+        Toast.makeText((MainActivity)getActivity(), "Sorry, we don't have lyrics for that song.", Toast.LENGTH_SHORT).show();
     }
 
     public interface CallMainLoadVerseFragment {
