@@ -129,8 +129,10 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
             if (i < speechWords.length) {
                 // need to remove punctuation from this word
                 String currentWordNoPunc = viewHolder.removeWordPunc(referenceWords[i]);
-                Log.d("CHECKING THIS WORD", currentWordNoPunc);
+                Log.d("VERSE WORD", currentWordNoPunc);
                 String speechWord = speechWords[i].toLowerCase();
+                Log.d("Speech WORD", speechWord);
+
                 if (speechWord.equals(currentWordNoPunc)
                         ) {
                     //if word is match, pull original from reference WHICH HAS PUNC and add to display
@@ -152,6 +154,7 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
         // We know speech did not equal reference
         // use previousDisplayWords to know where to begin inserting new letter
         String previousWord = previousDisplayWords.get(i).toString();
+        Log.d("Prevous word", previousWord);
         if (viewHolder.alreadySolved(previousWord)) {
             viewHolder.setHintWords(previousWord);
             return;
@@ -163,6 +166,7 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
                 dashCount++;
             }
         }
+        Log.d("current level", String.valueOf(currentLevel));
         switch (currentLevel) {
             case 1:
                 if (dashCount > 1) {
@@ -332,6 +336,7 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
         }
 
         public String removeWordPunc(String word) {
+           word = word.startsWith("'") ? word.substring(1):word;
             return word.replaceAll("[^a-zA-Z' ]", "").toLowerCase();
         }
 
@@ -345,6 +350,8 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
         }
 
         public void setHintWords(String word) {
+            //by removing ' at beginning now off by one in revealing.
+
             String tempWord = removeWordPunc(word);
             String newDisplayWord = "";
             switch (currentLevel) {
@@ -362,7 +369,6 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
                                 // level 3, no first letter, add "-"
                                 if (isAtoZ(tempWord.charAt(j))) {
                                     newDisplayWord = newDisplayWord + "-";
-                                    Log.d("Level 3", newDisplayWord);
                                 } else {
                                     // keep punctuation
                                     newDisplayWord = newDisplayWord + tempWord.charAt(j);
