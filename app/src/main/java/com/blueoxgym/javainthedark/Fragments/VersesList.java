@@ -108,6 +108,7 @@ public class VersesList extends Fragment implements  View.OnClickListener {
 
     public void lyricsToVerseList(){
         String lyrics = getArguments().getString("lyrics", "");
+        lyrics = lyrics.replace("\n\n", "\n");
         verseList = new ArrayList<String>();
         finalModVerseList = new ArrayList<String>();
         verseList= Arrays.asList(lyrics.split("\n"));
