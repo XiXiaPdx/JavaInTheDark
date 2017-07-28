@@ -160,16 +160,18 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
             return;
         }
         StringBuilder tempWord = new StringBuilder(previousWord);
-        int dashCount = 0;
-        for (int k = 0; k < previousWord.length(); k++) {
-            if (String.valueOf(previousWord.charAt(k)).equals("-")) {
-                dashCount++;
-            }
-        }
+//        int dashCount = 0;
+//        for (int k = 0; k < previousWord.length(); k++) {
+//            if (String.valueOf(previousWord.charAt(k)).equals("-")) {
+//                dashCount++;
+//            }
+//        }
+        Boolean dashCount = previousWord.contains("-");
+
         Log.d("current level", String.valueOf(currentLevel));
         switch (currentLevel) {
             case 1:
-                if (dashCount > 1) {
+                if (dashCount) {
                     for (int j = 0; j < previousWord.length(); j++) {
                         if (String.valueOf(previousWord.charAt(j)).equals("-")) {
                             tempWord.setCharAt(j, referenceWords[i].charAt(j));
@@ -186,7 +188,7 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
                 displayWords.add(previousWord);
                 break;
             case 3:
-                if (dashCount > 1) {
+                if (dashCount) {
                     Random ran = new Random();
                     int randomIndex = 0;
                     Character randomLetter;
@@ -194,7 +196,7 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
                         randomIndex = ran.nextInt(referenceWords[i].length());
                         randomLetter = referenceWords[i].charAt(randomIndex);
                     }
-                    while (randomIndex == 0 || viewHolder.ifEndInPunc(randomLetter) || viewHolder.isAtoZ(tempWord.charAt(randomIndex)));
+                    while (randomIndex == 0 || viewHolder.ifNotLetter(randomLetter) || viewHolder.isAtoZ(tempWord.charAt(randomIndex)));
                     tempWord.setCharAt(randomIndex, randomLetter);
                     displayWords.add(tempWord);
                 } else {
@@ -321,7 +323,7 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
             if (tempWord.length() == 1) {
                 displayWords.add("-");
                 return true;
-            } else if (tempWord.length() == 2 && ifEndInPunc(tempWord.charAt(1))) {
+            } else if (tempWord.length() == 2 && ifNotLetter(tempWord.charAt(1))) {
                 // corner case   "I,"
                 displayWords.add("-" + tempWord.charAt(1));
                 return true;
@@ -336,11 +338,10 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
         }
 
         public String removeWordPunc(String word) {
-           word = word.startsWith("'") ? word.substring(1):word;
             return word.replaceAll("[^a-zA-Z' ]", "").toLowerCase();
         }
 
-        public Boolean ifEndInPunc(Character letter) {
+        public Boolean ifNotLetter(Character letter) {
             Pattern p = Pattern.compile("[,.?!:']");
             Matcher m = p.matcher(String.valueOf(letter));
             if (m.find()) {
@@ -354,6 +355,14 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
 
             String tempWord = removeWordPunc(word);
             String newDisplayWord = "";
+            try {
+                if (!Character.isLetterOrDigit(word.charAt(0))) {
+                    newDisplayWord = newDisplayWord + String.valueOf(word.charAt(0));
+                }
+            } catch (StringIndexOutOfBoundsException e)
+            {
+                Log.e("SET HINT WORDS", "Empty word in this verse!");
+            }
             switch (currentLevel) {
                 case 1:
                 case 3:
@@ -382,6 +391,8 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
                 case 2:
                     //just the first letter only
                 case 4:
+                     newDisplayWord = "";
+
                     //level 4, just a blank for each word
                     for (int j = 0; j < tempWord.length(); j++) {
                         // display first letter of word
@@ -395,7 +406,7 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseViewHol
                                     break;
                             }
                             //checking if there is punctuation at end of word
-                        } else if (j == (tempWord.length() - 1) && ifEndInPunc(tempWord.charAt(j))) {
+                        } else if (j == (tempWord.length() - 1) && ifNotLetter(tempWord.charAt(j))) {
                             newDisplayWord = newDisplayWord + tempWord.charAt(j);
                         }
                     }

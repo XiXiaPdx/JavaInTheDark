@@ -128,9 +128,6 @@ public class VersesList extends Fragment implements  View.OnClickListener {
     }
 
     public String scrubbed (String verseToScrub){
-        if (verseToScrub.contains("")){
-            Log.d("not clean", verseToScrub);
-        }
         return verseToScrub;
     }
 
