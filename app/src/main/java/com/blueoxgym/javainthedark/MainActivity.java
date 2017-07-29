@@ -1,6 +1,8 @@
 package com.blueoxgym.javainthedark;
 
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -42,6 +44,7 @@ public FirebaseAuth firebaseAuth;
     private String artistName;
     private SharedPreferences mSharedPreferences;
     private SharedPreferences.Editor mEditor;
+    private FragmentManager fragmentManager;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +63,8 @@ public FirebaseAuth firebaseAuth;
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        fragmentManager = getSupportFragmentManager();
+
         makeAuthListener();
     }
 
@@ -72,10 +77,14 @@ public FirebaseAuth firebaseAuth;
         Fade exitFade = new Fade();
         exitFade.setDuration(200);
         fragment.setExitTransition(exitFade);
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        if(fragment.toString().contains("MicFragment") || fragment.toString().contains("Instructions")) {
+
+        if(fragment.toString().contains("MicFragment")) {
             fragmentManager.beginTransaction().replace(R.id.content2_frame, fragment).addToBackStack(null).commit();
-        } else {
+        } else if (fragment.toString().contains("Instructions")) {
+            fragmentManager.beginTransaction().replace(R.id.content2_frame, fragment).addToBackStack(null).commit();
+        } else if (fragment.toString().contains("Search")) {
+            fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack("Search").commit();
+        } else if (fragment.toString().contains("Verses")) {
             fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack(null).commit();
         }
     }
@@ -101,8 +110,11 @@ public void makeAuthListener() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
+        } else if (fragmentManager.findFragmentById(R.id.content_frame) instanceof LyricSearch ) {
+            fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             super.onBackPressed();
+        } else {
+            fragmentManager.popBackStack("Search", FragmentManager.POP_BACK_STACK_INCLUSIVE);
         }
     }
 
@@ -181,6 +193,5 @@ public void makeAuthListener() {
 
     @Override
     public void checkingSpeech(String text) {
-
     }
 }
